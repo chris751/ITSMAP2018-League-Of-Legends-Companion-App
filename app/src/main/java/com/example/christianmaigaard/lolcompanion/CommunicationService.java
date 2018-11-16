@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.textclassifier.TextLinks;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -71,29 +70,6 @@ public class CommunicationService extends Service {
         queue.add(jsonObjectRequest);
     }
 
-    private void createAllChampionsRequest(){
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, Constants.DATA_DRAGON_BASE_URL + Constants.LOL_VERSION_NUMBER + Constants.DD_ALL_CHAMPS_END_POINT + Constants.SUMMONER_ID, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("requestResponse","Response: " + response.toString());
-                        // TODO: broadcast svaret
-                    }
-                }, new ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("requestResponse", "Der skete en fejl");
-                        Log.d("requestResponse", error.toString());
-
-                        // TODO: Handle error
-
-                    }
-                });
-        queue.add(jsonObjectRequest);
-    }
-
     public void createChampionMastoryRequest(long summonerID){
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + Constants.SUMMONER_ID + Constants.API_KEY, null, new Response.Listener<JSONArray>() {
@@ -103,7 +79,6 @@ public class CommunicationService extends Service {
                             JSONObject hej = (JSONObject)response.get(1);
                             long hejsa = hej.getLong("championId");
                             Log.d("requestResponse", hejsa + "");
-                            findSpecificChampionById(hejsa);
                             // TODO: det er måske nemmest at gemme alle champs plus ID i en lokal database. og så finde det på den måde
                         }catch (JSONException e){
                             Log.d("requestResponse", e.toString());
@@ -119,41 +94,5 @@ public class CommunicationService extends Service {
                 }
         );
         queue.add(jsonArrayRequest);
-
     }
-
-    private void findSpecificChampionById(long championId){
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, Constants.DATA_DRAGON_BASE_URL + Constants.LOL_VERSION_NUMBER + Constants.DD_ALL_CHAMPS_END_POINT + Constants.SUMMONER_ID, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("requestResponse","Response: " + response.toString());
-                        // TODO: broadcast svaret
-                        try {
-                            JSONArray championArray = response.getJSONArray("data");
-                            Log.d("requestResponse", championArray.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("requestResponse", "Der skete en fejl");
-                        Log.d("requestResponse", error.toString());
-
-                        // TODO: Handle error
-
-                    }
-                });
-        queue.add(jsonObjectRequest);
-    }
-
-    private void iterateThroughChampionListFindId(long championId){
-
-    }
-
 }
