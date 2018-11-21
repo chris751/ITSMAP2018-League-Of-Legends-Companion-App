@@ -72,12 +72,12 @@ public class CommunicationService extends Service {
     }
 
     public void getBestChamp(){
-        createChampionMastoryRequest(20129544);
+        createChampionMastoryRequest(42817870);
     }
 
     private void createChampionMastoryRequest(long summonerID){
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + Constants.SUMMONER_ID + Constants.API_KEY, null, new Response.Listener<JSONArray>() {
+                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + summonerID + Constants.API_KEY, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         try{
@@ -132,4 +132,6 @@ public class CommunicationService extends Service {
         });
         queue.add(request);
     }
+
+
 }

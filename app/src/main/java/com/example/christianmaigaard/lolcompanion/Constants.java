@@ -9,7 +9,7 @@ public final class Constants {
     public static final String RIOT_API_BASE_URL = "https://euw1.api.riotgames.com";
     public static final String RIOT_API_SUMMONER_INFO_END_POINT = "/lol/summoner/v3/summoners/by-name/";
     public static final String RIOT_API_BEST_CHAMP_END_POINT = "/lol/champion-mastery/v3/champion-masteries/by-summoner/";
-    public static final String SUMMONER_ID = "20129544";
+    //public static final String SUMMONER_ID = "20129544";
 
 
     //Get champions end point

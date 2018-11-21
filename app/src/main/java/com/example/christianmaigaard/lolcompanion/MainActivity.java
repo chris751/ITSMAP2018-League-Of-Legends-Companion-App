@@ -6,13 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView level;
     private TextView bestChamp;
     private Button getInfo;
+    private ImageView champImage;
 
     private CommunicationService mService;
     private boolean mBound = false;
@@ -38,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         level = findViewById(R.id.levelView);
         bestChamp = findViewById(R.id.bestChampView);
         getInfo = findViewById(R.id.getInfoButton);
+        champImage = findViewById(R.id.champIcon);
 
         //Intent intent = new Intent()
         startService(new Intent(this, CommunicationService.class));
@@ -54,10 +61,13 @@ public class MainActivity extends AppCompatActivity {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d("broadcastReceiver", intent.getStringExtra(Constants.BEST_CHAMPION_EXTRA));
-                bestChamp.setText(intent.getStringExtra(Constants.BEST_CHAMPION_EXTRA));
+                if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION)){
+                    String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_EXTRA);
+                    bestChamp.setText(bestChampName);
+                    champImage.setImageDrawable(loadImageFromAssets(bestChampName));
+                }
 
-                // TODO: gør noget mere her
+
             }
         };
         mFilter = new IntentFilter();
@@ -99,4 +109,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+
+    // Source: https://xjaphx.wordpress.com/2011/10/02/store-and-use-files-in-assets/
+    private Drawable loadImageFromAssets(String champName){
+        // load image
+        try {
+            // get input stream
+            InputStream ims = getAssets().open("champion/" + champName + ".png");
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            return d;
+        }
+        catch(IOException ex) {
+            return null;
+        }
+    }
 }
