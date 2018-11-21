@@ -12,5 +12,16 @@ public final class Constants {
     public static final String SUMMONER_ID = "20129544";
 
 
-    public static final String DATA_DRAGON = "http://ddragon.leagueoflegends.com/cdn/8.23.1/data/en_US/champion.json";
+    //Get champions end point
+    // Building url: COMMUNITY_DRAGON_CHAMPION_URL + <champkey/id> + .json
+    public static final String COMMUNITY_DRAGON_CHAMPION_URL = "http://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/";
+
+
+
+    //Broadcast actions
+    public static final String BROADCAST_BEST_CHAMPION = "BEST_CHAMPION";
+
+    // EXTRAS
+    public static final String BEST_CHAMPION_EXTRA = "BEST_CHAMPION_EXTRA";
+
 }
