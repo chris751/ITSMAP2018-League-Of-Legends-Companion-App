@@ -11,4 +11,6 @@ public final class Constants {
     public static final String RIOT_API_BEST_CHAMP_END_POINT = "/lol/champion-mastery/v3/champion-masteries/by-summoner/";
     public static final String SUMMONER_ID = "20129544";
 
+
+    public static final String DATA_DRAGON = "http://ddragon.leagueoflegends.com/cdn/8.23.1/data/en_US/champion.json";
 }

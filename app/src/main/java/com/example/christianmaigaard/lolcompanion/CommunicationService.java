@@ -127,6 +127,30 @@ public class CommunicationService extends Service {
         }
     }
 
+
+    public void testDataDragonCall(){
+        String url = Constants.DATA_DRAGON;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("requestResponse","Response: " + response.toString());
+                //TODO: broadcast svaret
+            }
+        }, new ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("requestResponse", "Der skete en fejl");
+                Log.d("requestResponse", error.toString());
+
+                // TODO: Handle error
+
+            }
+        });
+        queue.add(request);
+    }
+
     //Json reader source: https://stackoverflow.com/questions/13814503/reading-a-json-file-in-android
     public String loadJSONFromAsset(Context context) {
         String json = null;

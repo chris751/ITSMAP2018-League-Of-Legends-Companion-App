@@ -41,8 +41,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(mBound){
-                    mService.createSummonerInfoRequest("Nikkelazz");
-                    mService.getBestChamp();
+                    mService.testDataDragonCall();
+                    //mService.createSummonerInfoRequest("Nikkelazz");
+                    //mService.getBestChamp();
                 }
             }
         });
