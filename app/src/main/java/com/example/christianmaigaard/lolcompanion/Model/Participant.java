@@ -1,6 +1,8 @@
 package com.example.christianmaigaard.lolcompanion.Model;
 
-public class Participant {
+import java.io.Serializable;
+
+public class Participant implements Serializable {
 
     long summonerId;
     String summonerName;

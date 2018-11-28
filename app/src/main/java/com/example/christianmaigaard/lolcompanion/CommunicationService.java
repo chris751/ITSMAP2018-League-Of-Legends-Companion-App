@@ -4,7 +4,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Region;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Telephony;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -21,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CommunicationService extends Service {
@@ -158,7 +161,7 @@ public class CommunicationService extends Service {
                 Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SPECTATOR_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
+                Intent intent = new Intent(Constants.BROADCAST_GAME_PARTICIPANTS_ACTION);
                 ArrayList<Participant> playersInGame = new ArrayList<Participant>();
                 try {
                     JSONArray participants = response.getJSONArray("participants");
@@ -170,10 +173,12 @@ public class CommunicationService extends Service {
                         playersInGame.add(p);
                         i++;
                     }
+                    intent.putExtra(Constants.GAME_PARTICIPANTS_EXTRA, intent);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                matchChampionIdWithNames(playersInGame);
 
                 Log.d("requestResponse", playersInGame.toString());
             }
@@ -185,6 +190,10 @@ public class CommunicationService extends Service {
         }
         );
         queue.add(jsonObjectRequest);
+    }
+
+    private void matchChampionIdWithNames(ArrayList<Participant> playerList){
+
     }
 
 
