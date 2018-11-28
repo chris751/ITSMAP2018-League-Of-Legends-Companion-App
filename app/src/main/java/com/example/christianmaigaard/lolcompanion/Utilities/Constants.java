@@ -1,4 +1,4 @@
-package com.example.christianmaigaard.lolcompanion;
+package com.example.christianmaigaard.lolcompanion.Utilities;
 
 public final class Constants {
     // Api key: Has to be updated every 24 hours atm.

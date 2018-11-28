@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import static com.example.christianmaigaard.lolcompanion.Constants.SHARED_PREFERENCES;
-import static com.example.christianmaigaard.lolcompanion.Constants.SUMMONOR_NAME;
+import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
+import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
+
 import static com.example.christianmaigaard.lolcompanion.EnterSummonerNameActivity.SUMMONER_NAME;
 import java.io.IOException;
 import java.io.InputStream;

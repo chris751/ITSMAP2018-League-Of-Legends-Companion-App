@@ -1,11 +1,10 @@
-package com.example.christianmaigaard.lolcompanion;
+package com.example.christianmaigaard.lolcompanion.Utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import static com.example.christianmaigaard.lolcompanion.Constants.SHARED_PREFERENCES;
-import static com.example.christianmaigaard.lolcompanion.Constants.SUMMONOR_NAME;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SHARED_PREFERENCES;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONOR_NAME;
 
 public class SharedPrefs {
 
@@ -13,7 +12,6 @@ public class SharedPrefs {
 
     // Code source - https://www.journaldev.com/9412/android-shared-preferences-example-tutorial
     public static void storeSummonerNameInSharedPreferences(Context c, String summonerName) {
-        Log.d(LOG, "Method called"); // getting String
 
         SharedPreferences pref = c.getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
