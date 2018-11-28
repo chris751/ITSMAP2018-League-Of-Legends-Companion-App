@@ -12,13 +12,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import static com.example.christianmaigaard.lolcompanion.EnterSummonerNameActivity.SUMMONER_NAME;
+
 public class MainActivity extends AppCompatActivity {
+
+    private static final String LOG = "MainActivity";
 
     private TextView name;
     private TextView profileIcon;
     private TextView level;
     private TextView bestChamp;
     private Button getInfo;
+    private String summonerName;
 
     private CommunicationService mService;
     private boolean mBound = false;
@@ -27,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        // Code inspired heavily from "intentClassExample"
+        Intent dataFromSummonerNameActivity = getIntent();
+        summonerName = dataFromSummonerNameActivity.getStringExtra(SUMMONER_NAME);
+        // TODO Persist summoner name
+        Log.d(LOG, summonerName);
 
         name = findViewById(R.id.nameView);
         profileIcon = findViewById(R.id.profileIconView);
