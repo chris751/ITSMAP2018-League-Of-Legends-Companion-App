@@ -1,10 +1,10 @@
 package com.example.christianmaigaard.lolcompanion;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.text.Html;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -19,9 +19,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 public class CommunicationService extends Service {
 
@@ -75,18 +72,18 @@ public class CommunicationService extends Service {
     }
 
     public void getBestChamp(){
-        createChampionMastoryRequest(1111);
+        createChampionMastoryRequest(42817870);
     }
 
     private void createChampionMastoryRequest(long summonerID){
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + Constants.SUMMONER_ID + Constants.API_KEY, null, new Response.Listener<JSONArray>() {
+                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + summonerID + Constants.API_KEY, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         try{
                             JSONObject firstObject = (JSONObject)response.get(0);
                             long firstObjectId = firstObject.getLong("championId");
-                            findChampionById(firstObjectId);
+                            createChampionNameByIdRequest(firstObjectId);
                         }catch (JSONException e){
                             Log.d("requestResponse", e.toString());
                             e.printStackTrace();
@@ -103,52 +100,38 @@ public class CommunicationService extends Service {
         queue.add(jsonArrayRequest);
     }
 
-    private void findChampionById(long championId) throws JSONException {
-        String championListString = loadJSONFromAsset(getApplicationContext());
-        JSONObject championListJson = new JSONObject(championListString);
 
-        JSONArray onlyChampionList = (JSONArray) championListJson.getJSONArray("data");
+    public void createChampionNameByIdRequest(long championId){
+        String url = Constants.COMMUNITY_DRAGON_CHAMPION_URL;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + championId + ".json", null, new Response.Listener<JSONObject>() {
 
-//        JSONObject json = championListJson.getJSONObject("data");
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("requestResponse","Response: " + response.toString());
+                Intent intent = new Intent(Constants.BROADCAST_BEST_CHAMPION);
+                try {
+                    intent.putExtra(Constants.BEST_CHAMPION_EXTRA, response.getString("name"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
+                sendBroadcast(intent);
 
-
-        for(int i=0; i < onlyChampionList.length(); i++){
-            JSONObject champion = (JSONObject) onlyChampionList.get(i);
-            String key = champion.getString("key");
-            Long keyAsLong = Long.parseLong(key);
-            if(championId == keyAsLong){
-                String championName = champion.getString("id");
-                Log.d("requestResponse",  championName);
-                // TODO: broadcast result
-            } else {
-                Log.d("requestResponse", "There was no champion with that key");
+                //TODO: broadcast svaret
             }
-        }
+        }, new ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("requestResponse", "Der skete en fejl");
+                Log.d("requestResponse", error.toString());
+
+                // TODO: Handle error
+
+            }
+        });
+        queue.add(request);
     }
 
-    //Json reader source: https://stackoverflow.com/questions/13814503/reading-a-json-file-in-android
-    public String loadJSONFromAsset(Context context) {
-        String json = null;
-        try {
-            InputStream is = context.getAssets().open("champion.json");
 
-            int size = is.available();
-
-            byte[] buffer = new byte[size];
-
-            is.read(buffer);
-
-            is.close();
-
-            json = new String(buffer, "UTF-8");
-
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
-
-    }
 }
