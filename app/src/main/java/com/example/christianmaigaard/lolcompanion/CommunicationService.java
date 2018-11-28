@@ -15,10 +15,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.christianmaigaard.lolcompanion.Model.Participant;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class CommunicationService extends Service {
 
@@ -151,15 +154,28 @@ public class CommunicationService extends Service {
     //endregion
 
     public void createActiveGameRequest(long summonerId){
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SPECTATOR_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
+                ArrayList<Participant> playersInGame = new ArrayList<Participant>();
                 try {
                     JSONArray participants = response.getJSONArray("participants");
+                    //Save all the game participants in a list
+                    int i = 0;
+                    while(i <participants.length()){
+                        JSONObject jsonParticipant = (JSONObject) participants.get(i);
+                        Participant p = new Participant(jsonParticipant.getLong("summonerId"), jsonParticipant.getString("summonerName"), jsonParticipant.getLong("championId"));
+                        playersInGame.add(p);
+                        i++;
+                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                Log.d("requestResponse", playersInGame.toString());
             }
         }, new Response.ErrorListener(){
                     @Override

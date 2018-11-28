@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Button getInfo;
     private String summonerName;
     private ImageView champImage;
+    private Button liveGame;
 
 
     private CommunicationService mService;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         bestChamp = findViewById(R.id.bestChampView);
         getInfo = findViewById(R.id.getInfoButton);
         champImage = findViewById(R.id.champIcon);
+        liveGame = findViewById(R.id.goToLive);
 
         //Intent intent = new Intent()
         startService(new Intent(this, CommunicationService.class));
@@ -66,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
                     mService.createSummonerInfoRequest("Nikkelazz");
                     mService.getBestChamp();
                 }
+            }
+        });
+        liveGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LiveGameActivity.class);
+                startActivity(intent);
             }
         });
 
