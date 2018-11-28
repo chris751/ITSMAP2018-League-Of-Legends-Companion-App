@@ -5,24 +5,33 @@
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
     tools:context=".LiveGameActivity">
-
-    <ListView
-        android:id="@+id/blueTeamList"
-        android:layout_width="179dp"
-        android:layout_height="483dp" />
-
-    <ListView
-        android:id="@+id/redTeamList"
-        android:layout_width="203dp"
-        android:layout_height="483dp"
-        android:layout_alignBottom="@+id/hejsa"
-        android:layout_toRightOf="@id/blueTeamList" />
-    <Button
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/blueTeamList"
-        android:text="yo"
-        android:id="@+id/hejsa"/>
+        android:layout_centerHorizontal="true">
+        <ListView
+            android:id="@+id/blueTeamList"
+            android:layout_width="203dp"
+            android:layout_height="483dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="16dp" />
+
+        <ListView
+            android:id="@+id/redTeamList"
+            android:layout_width="203dp"
+            android:layout_height="483dp"
+            android:layout_alignBottom="@+id/hejsa"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="16dp"
+            android:layout_toRightOf="@id/blueTeamList" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/blueTeamList"
+            android:text="yo"
+            android:id="@+id/hejsa"/>
+    </RelativeLayout>
 
 
 </RelativeLayout>

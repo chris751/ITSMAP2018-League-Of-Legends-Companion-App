@@ -72,7 +72,7 @@ public class LiveGameActivity extends AppCompatActivity {
 
                     //Run through playerList and save the image for current champion
                     for(int i = 0; i < playerList.size(); i++){
-                        playerList.get(i).setChampIcon(loadChampImageFromAssets(playerList.get(i).getChampionName()));
+                        playerList.get(i).setChampIcon(loadChampImageFromAssets(playerList.get(i).getChampionAlias()));
                     }
                     setupList();
                 }

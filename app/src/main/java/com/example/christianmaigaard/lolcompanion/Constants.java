@@ -2,7 +2,7 @@ package com.example.christianmaigaard.lolcompanion;
 
 public final class Constants {
     // Api key: Has to be updated every 24 hours atm.
-    public static final String API_KEY = "?api_key="+ "RGAPI-3eb443c6-25d9-4430-aa57-5b856a6cb770";
+    public static final String API_KEY = "?api_key="+ "RGAPI-1ddcf195-7e3f-4f43-8e9d-5f41c1c28bf4";
 
     // end points and url for riot api
     // Building api call example: RIOT_API_BASE_URL + <END_POINT> + API_KEY

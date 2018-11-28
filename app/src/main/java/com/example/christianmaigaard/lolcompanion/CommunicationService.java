@@ -165,7 +165,7 @@ public class CommunicationService extends Service {
                 Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SPECTATOR_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
+                playersInGame.clear();
 
                 try {
                     JSONArray participants = response.getJSONArray("participants");
@@ -210,7 +210,9 @@ public class CommunicationService extends Service {
                 Log.d("requestResponse","Response: " + response.toString());
                 try {
                     String name = response.getString("name");
+                    String alias = response.getString("alias");
                     playersInGame.get(index).setChampionName(name);
+                    playersInGame.get(index).setChampionAlias(alias);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

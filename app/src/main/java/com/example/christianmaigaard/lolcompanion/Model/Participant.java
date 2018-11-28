@@ -10,6 +10,7 @@ public class Participant implements Serializable {
     String summonerName;
     long championId;
     String championName;
+    String championAlias;
     Drawable champIcon;
 
 
@@ -45,6 +46,14 @@ public class Participant implements Serializable {
 
     public void setChampIcon(Drawable champIcon){
         this.champIcon = champIcon;
+    }
+
+    public String getChampionAlias(){
+        return championAlias;
+    }
+
+    public void setChampionAlias(String championAlias){
+        this.championAlias = championAlias;
     }
 
 }
