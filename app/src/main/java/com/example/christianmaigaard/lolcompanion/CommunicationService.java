@@ -1,6 +1,7 @@
 package com.example.christianmaigaard.lolcompanion;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Region;
 import android.os.Binder;
@@ -18,6 +19,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
+import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +36,8 @@ public class CommunicationService extends Service {
 
     // Volley Source: https://developer.android.com/training/volley/simple#java
     RequestQueue queue;
+
+    private ArrayList<Participant> playersInGame = new ArrayList<>();
 
 
     @Override
@@ -161,8 +165,8 @@ public class CommunicationService extends Service {
                 Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SPECTATOR_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Intent intent = new Intent(Constants.BROADCAST_GAME_PARTICIPANTS_ACTION);
-                ArrayList<Participant> playersInGame = new ArrayList<Participant>();
+
+
                 try {
                     JSONArray participants = response.getJSONArray("participants");
                     //Save all the game participants in a list
@@ -173,13 +177,10 @@ public class CommunicationService extends Service {
                         playersInGame.add(p);
                         i++;
                     }
-                    intent.putExtra(Constants.GAME_PARTICIPANTS_EXTRA, intent);
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                matchChampionIdWithNames(playersInGame);
-
+                matchChampionIdWithNames();
                 Log.d("requestResponse", playersInGame.toString());
             }
         }, new Response.ErrorListener(){
@@ -192,8 +193,51 @@ public class CommunicationService extends Service {
         queue.add(jsonObjectRequest);
     }
 
-    private void matchChampionIdWithNames(ArrayList<Participant> playerList){
+    private void matchChampionIdWithNames(){
 
+        for(int i =0; i<playersInGame.size(); i++){
+            createChampIdToNameRequest(playersInGame.get(i).getChampionId(), i);
+        }
+
+    }
+
+    private void createChampIdToNameRequest(long champId, final int index){
+        String url = Constants.COMMUNITY_DRAGON_CHAMPION_URL;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + champId + ".json", null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("requestResponse","Response: " + response.toString());
+                try {
+                    String name = response.getString("name");
+                    playersInGame.get(index).setChampionName(name);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(index == playersInGame.size()-1){
+                    ParticipantsWrapper wrapper = new ParticipantsWrapper(playersInGame);
+                    Log.d("playerList", wrapper.toString());
+                    Intent intent = new Intent(Constants.BROADCAST_GAME_PARTICIPANTS_ACTION);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(Constants.GAME_PARTICIPANTS_EXTRA, wrapper);
+                    intent.putExtras(bundle);
+
+                    sendBroadcast(intent);
+                }
+
+            }
+        }, new ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("requestResponse", "Der skete en fejl");
+                Log.d("requestResponse", error.toString());
+
+                // TODO: Handle error
+
+            }
+        });
+        queue.add(request);
     }
 
 

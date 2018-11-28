@@ -1,5 +1,6 @@
 package com.example.christianmaigaard.lolcompanion;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,31 +11,33 @@ import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 
+import com.example.christianmaigaard.lolcompanion.Adapter.BlueTeamListAdapter;
+import com.example.christianmaigaard.lolcompanion.Adapter.RedTeamListAdapter;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
+import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LiveGameActivity extends AppCompatActivity {
 
+    ArrayList<Participant> playerList;
 
     Button getParticipants;
-    ImageView blueTopImg;
-    ImageView blueJungleImg;
-    ImageView blueMidImg;
-    ImageView blueBotImg;
-    ImageView blueSupportImg;
 
-    ImageView redTopImg;
-    ImageView redJungleImg;
-    ImageView redMidImg;
-    ImageView redBotImg;
-    ImageView redSupportImg;
+    BlueTeamListAdapter blueTeamListAdapter;
+    ListView blueListView;
+    RedTeamListAdapter redTeamListAdapter;
+    ListView redListView;
 
     private CommunicationService mService;
     private boolean mBound = false;
@@ -48,29 +51,32 @@ public class LiveGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_game);
 
-        blueTopImg = findViewById(R.id.blueTopImg);
-        blueJungleImg = findViewById(R.id.blueJungleImg);
-        blueMidImg = findViewById(R.id.blueMidImg);
-        blueBotImg = findViewById(R.id.blueBotImg);
-        blueSupportImg = findViewById(R.id.blueSupportImg);
+        blueListView = findViewById(R.id.blueTeamList);
+        redListView = findViewById(R.id.redTeamList);
 
-        redTopImg = findViewById(R.id.redTopImg);
-        redJungleImg = findViewById(R.id.redJungleImg);
-        redMidImg = findViewById(R.id.redMidImg);
-        redBotImg = findViewById(R.id.redBotImg);
-        redSupportImg = findViewById(R.id.redSupportImg);
+        getParticipants = findViewById(R.id.hejsa);
 
-
+        getParticipants.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mService.createActiveGameRequest(106488919);
+            }
+        });
 
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent.getAction().equals(Constants.BROADCAST_GAME_PARTICIPANTS_ACTION)){
-                    ArrayList<Participant> playerList = (ArrayList<Participant>) intent.getSerializableExtra(Constants.GAME_PARTICIPANTS_EXTRA);
+                    ParticipantsWrapper wrappedList = (ParticipantsWrapper) intent.getExtras().get(Constants.GAME_PARTICIPANTS_EXTRA);
+                    playerList = wrappedList.getPlayerList();
 
-                    playerList.get(0).getChampionId();
-
+                    //Run through playerList and save the image for current champion
+                    for(int i = 0; i < playerList.size(); i++){
+                        playerList.get(i).setChampIcon(loadChampImageFromAssets(playerList.get(i).getChampionName()));
+                    }
+                    setupList();
                 }
+
             }
         };
         mFilter = new IntentFilter();
@@ -78,6 +84,37 @@ public class LiveGameActivity extends AppCompatActivity {
         registerReceiver(mReceiver, mFilter);
     }
 
+    private void setupList(){
+        // Setup up two lists, one for blue team one for red team
+        ArrayList<Participant> blueTeam = new ArrayList<Participant>();
+        ArrayList<Participant> redTeam = new ArrayList<Participant>();
+
+        // First half is blue team, second hals is red
+        for(int i = 0; i < playerList.size()/2; i++){
+            blueTeam.add(playerList.get(i));
+        }
+        for (int i = 5; i< playerList.size(); i++){
+            redTeam.add(playerList.get(i));
+        }
+
+
+        blueTeamListAdapter = new BlueTeamListAdapter(LiveGameActivity.this, blueTeam);
+        blueListView.setAdapter(blueTeamListAdapter);
+        blueListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("PlayerList", "SUCK DICK");
+            }
+        });
+        redTeamListAdapter = new RedTeamListAdapter(LiveGameActivity.this, redTeam);
+        redListView.setAdapter(redTeamListAdapter);
+        redListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("PlayerList", "Suck red dick");
+            }
+        });
+    }
 
     @Override
     protected void onStart(){

@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ITSMAP.iml" filepath="$PROJECT_DIR$/ITSMAP.iml" />
-      <module fileurl="file://$PROJECT_DIR$/LolCompanion.iml" filepath="$PROJECT_DIR$/LolCompanion.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

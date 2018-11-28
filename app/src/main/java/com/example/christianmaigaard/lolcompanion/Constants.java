@@ -23,12 +23,10 @@ public final class Constants {
     public static final String BROADCAST_BEST_CHAMPION_ACTION = "BEST_CHAMPION";
     public static final String BROADCAST_SUMMONER_INFO_ACTION = "SUMMONER_INFO";
     public static final String BROADCAST_GAME_PARTICIPANTS_ACTION = "GAME_PARTICIPANTS";
-    public static final String BROADCAST_IN_GAME_CHAMP_ICON = "IN_GAME_CHAMP_ICON";
 
     // EXTRAS
     public static final String BEST_CHAMPION_EXTRA = "BEST_CHAMPION_EXTRA";
     public static final String SUMMONER_INFO_LEVEL_EXTRA = "SUMMONER_INFO_LEVEL_EXTRA";
     public static final String GAME_PARTICIPANTS_EXTRA = "GAME_PARTICIPANTS_EXTRA";
-    public static final String GAME_CHAMP_ICON_ID_EXTRA = "GAME_CHAMP_ICON_ID_EXTRA";
 
 }
