@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import static com.example.christianmaigaard.lolcompanion.Constants.SHARED_PREFERENCES;
+import static com.example.christianmaigaard.lolcompanion.Constants.SUMMONOR_NAME;
 import static com.example.christianmaigaard.lolcompanion.EnterSummonerNameActivity.SUMMONER_NAME;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,8 +51,12 @@ public class MainActivity extends AppCompatActivity {
         // Code inspired heavily from "intentClassExample"
         Intent dataFromSummonerNameActivity = getIntent();
         summonerName = dataFromSummonerNameActivity.getStringExtra(SUMMONER_NAME);
-        // TODO Persist summoner name
-        Log.d(LOG, summonerName);
+
+        // save summonor name in sharedpreferences
+        SharedPrefs.storeSummonerNameInSharedPreferences(this, summonerName);
+        // retrieve summonor name in sharedpreferences
+        String newName = SharedPrefs.retrieveSummonorNameFromSharedPreferences(this);
+        Log.d(LOG, "got from prefs !!" + newName);
 
         name = findViewById(R.id.nameView);
         profileIcon = findViewById(R.id.profileIconView);
@@ -77,14 +85,15 @@ public class MainActivity extends AppCompatActivity {
                     bestChamp.setText(bestChampName);
                     champImage.setImageDrawable(loadImageFromAssets(bestChampName));
                 }
-
-
             }
         };
         mFilter = new IntentFilter();
         mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION);
         registerReceiver(mReceiver, mFilter);
     }
+
+
+
 
     @Override
     protected void onStart(){

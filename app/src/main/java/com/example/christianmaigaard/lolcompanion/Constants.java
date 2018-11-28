@@ -24,4 +24,9 @@ public final class Constants {
     // EXTRAS
     public static final String BEST_CHAMPION_EXTRA = "BEST_CHAMPION_EXTRA";
 
+    // Preferences
+    public static final String SHARED_PREFERENCES = "UserPreferences";
+    public static final String SUMMONOR_NAME = "SummonorName";
+
+
 }
