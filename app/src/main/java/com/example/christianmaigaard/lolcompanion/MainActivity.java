@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -53,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(mBound){
+                    mService.createSummonerInfoRequest("Nikkelazz");
                     mService.getBestChamp();
                 }
             }
@@ -61,17 +61,22 @@ public class MainActivity extends AppCompatActivity {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION)){
+                if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION_ACTION)){
                     String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_EXTRA);
                     bestChamp.setText(bestChampName);
-                    champImage.setImageDrawable(loadImageFromAssets(bestChampName));
+                    champImage.setImageDrawable(loadChampImageFromAssets(bestChampName));
+                }
+                if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
+                    long summonerLvl = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
+                    level.setText(summonerLvl+"");
                 }
 
 
             }
         };
         mFilter = new IntentFilter();
-        mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION);
+        mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION_ACTION);
+        mFilter.addAction(Constants.BROADCAST_SUMMONER_INFO_ACTION);
         registerReceiver(mReceiver, mFilter);
     }
 
@@ -111,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     // Source: https://xjaphx.wordpress.com/2011/10/02/store-and-use-files-in-assets/
-    private Drawable loadImageFromAssets(String champName){
+    private Drawable loadChampImageFromAssets(String champName){
         // load image
         try {
             // get input stream
