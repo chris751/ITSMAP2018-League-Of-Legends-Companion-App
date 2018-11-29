@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">LolCompanion</string>
-    <string name="title_activity_enter_summoner_name">EnterSummonerNameActivity</string>
+    <string name="title_activity_enter_summoner_name" translatable="false">EnterSummonerNameActivity</string>
     <string name="enter_summoner_name_activity_enter_summoner_name">Enter summoner name</string>
     <string name="enter_summoner_name_activity_find_button">Find</string>
     <string name="summoner_level">Level</string>
     <string name="most_played_champion">Most played champion</string>
     <string name="invalid_summoner_name">Invalid summoner name</string>
     <string name="check_summoner_name_for_correctness">Please check if the summoner name is correct</string>
-    <string name="ok">OK</string>
+    <string name="ok" translatable="false">OK</string>
     <string name="invalid_api_key">Invalid API key</string>
     <string name="please_contact_developers">Please contact the developers!</string>
     <string name="connection_failed">Connection failed</string>
@@ -24,7 +24,7 @@
     <string name="champion_level_5">Plays the champion to a level matching the players ranking</string>
     <string name="champion_level_6">Summoner likes this champ quite a lot, take care for cheeky plays</string>
     <string name="champion_level_7">Summoners main champ or one of them, knows the ins and outs of the mechanics</string>
-    <string name="champion_level_8">Be very careful one trick potential, watch any sudden movements, do not get baited</string>
+    <string name="champion_level_8">Be very careful, one trick potential, watch any sudden movements, do not get baited</string>
     <string name="champion_level_9">Most likely a god. Definitely a One Trick. FF15</string>
 
 </resources>

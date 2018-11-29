@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LolCompanion</string>
+    <string name="enter_summoner_name_activity_find_button">Find</string>
+    <string name="summoner_level">Level</string>
+    <string name="enter_summoner_name_activity_enter_summoner_name">Indtast summoner navn</string>
+    <string name="most_played_champion">Mest spillede champion</string>
+    <string name="invalid_summoner_name">Ugyldigt summoner navn</string>
+    <string name="check_summoner_name_for_correctness">Check venligst om dit summoner navn er korrekt</string>
+    <string name="invalid_api_key">Ugyldig API nøgle</string>
+    <string name="please_contact_developers">Kontakt venligst udviklerne</string>
+    <string name="connection_failed">Forbindelse fejlet</string>
+    <string name="please_check_connection">Check venligst din internet forbindelse</string>
+    <string name="not_in_game">Du er i øjeblikket ikke i et spil</string>
+    <string name="refresh_players_in_game">Opdater</string>
+    <string name="back">Tilbage</string>
+    <string name="champion_level_0">Har aldrig spillet denne champion</string>
+    <string name="champion_level_1">Har spillet denne champion et par gange</string>
+    <string name="champion_level_2">Begynder at have styr på sin champion</string>
+    <string name="champion_level_3">Kender spell afstande og deres egenskaber ret godt</string>
+    <string name="champion_level_4">Udover de aktive spells, er opmærksomheden på de passive stats hastigt stigende</string>
+    <string name="champion_level_5">Spiller denne champion på et niveau tilsvarende spillerens rank</string>
+    <string name="champion_level_6">Summoneren kan rigtig godt lide denne champion, pas på finurlige finter</string>
+    <string name="champion_level_7">Denne er en af summonerens primære champion, kender dens manøvre ud og ind</string>
+    <string name="champion_level_8">Pas meget på, one trick potentiale. Hold øje med pludselige bevægelser, lad dig ikke bide på krogen</string>
+    <string name="champion_level_9">Højst sandsynlig en gudespiller. Helt sikkert en one trick. FF15</string>
+</resources>
