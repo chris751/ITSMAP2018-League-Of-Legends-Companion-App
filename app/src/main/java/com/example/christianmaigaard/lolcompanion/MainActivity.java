@@ -20,8 +20,11 @@ import com.example.christianmaigaard.lolcompanion.Utilities.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
-import static com.example.christianmaigaard.lolcompanion.EnterSummonerNameActivity.SUMMONER_NAME;
+import java.io.IOException;
+import java.io.InputStream;
 
+import static com.example.christianmaigaard.lolcompanion.EnterSummonerNameActivity.SUMMONER_NAME;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
 
 
@@ -41,13 +44,11 @@ public class MainActivity extends AppCompatActivity {
     // Variables
     private String summonerName;
     private long summonerLevel;
-
-
-
-
+    private long summonerID;
+    // Services
     private CommunicationService mService;
     private boolean mBound = false;
-
+    // Broadcasts
     private BroadcastReceiver mReceiver;
     private IntentFilter mFilter;
 
@@ -56,38 +57,59 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        name = findViewById(R.id.nameView);
-        profileIcon = findViewById(R.id.profileIconView);
-        level = findViewById(R.id.levelView);
-        bestChamp = findViewById(R.id.bestChampView);
-        getInfo = findViewById(R.id.getInfoButton);
-        changeName = findViewById(R.id.main_activity_change_name_button);
-        champImage = findViewById(R.id.champIcon);
-        liveGame = findViewById(R.id.goToLive);
+        setupUiComponents();
+        getDataFromSummonerNameActivity();
 
-        // Code inspired heavily from "intentClassExample"
-        Intent dataFromSummonerNameActivity = getIntent();
-        summonerName = dataFromSummonerNameActivity.getStringExtra(SUMMONER_NAME);
-        summonerLevel = dataFromSummonerNameActivity.getLongExtra(SUMMONER_LEVEL,0);
-
-
-        // save summonor name in sharedpreferences
+        // Save summoner name in sharedpreferences
         SharedPrefs.storeSummonerNameInSharedPreferences(this, summonerName);
-        // retrieve summonor name in sharedpreferences
-        final String newName = SharedPrefs.retrieveSummonorNameFromSharedPreferences(this);
-        Log.d(LOG, "got from prefs !!" + newName);
+        SharedPrefs.storeSummonerIdInSharedPreferences(this, summonerID);
 
-        if(mBound){
-            mService.createSummonerInfoRequest(summonerName);
-            mService.getBestChamp();
-        }
+//        long summId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(this);
+        //      String summName = SharedPrefs.retrieveSummonorNameFromSharedPreferences(this);
 
 
-
-        //Intent intent = new Intent()
+        // Start services
         startService(new Intent(this, CommunicationService.class));
+        setButtonOnClickListeners();
+        startBroadcastReceiver();
+        registerIntentFilter();
+        updateUI();
+    }
 
+    private void getDataFromSummonerNameActivity() {
+        // Code inspired heavily from "intentClassExample"
+        // Fetch data from "EnterSummonerNameActivity"
+        Bundle extras = getIntent().getExtras();
+        summonerName = extras.getString(SUMMONER_NAME);
+        summonerLevel = extras.getLong(SUMMONER_LEVEL,0);
+        summonerID = extras.getLong(SUMMONER_ID,0);
+    }
 
+    private void registerIntentFilter() {
+        mFilter = new IntentFilter();
+        mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION_ACTION);
+        mFilter.addAction(Constants.BROADCAST_SUMMONER_INFO_ACTION);
+        registerReceiver(mReceiver, mFilter);
+    }
+
+    private void startBroadcastReceiver() {
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION_ACTION)){
+                    String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_EXTRA);
+                    bestChamp.setText(bestChampName);
+                    champImage.setImageDrawable(loadChampImageFromAssets(bestChampName));
+                }
+                if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
+                    long summonerLvl = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
+                    level.setText(summonerLvl+"");
+                }
+            }
+        };
+    }
+
+    private void setButtonOnClickListeners() {
         changeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,30 +133,22 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION_ACTION)){
-                    String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_EXTRA);
-                    bestChamp.setText(bestChampName);
-                    champImage.setImageDrawable(AssetHelper.loadChampImageFromAssets(MainActivity.this, bestChampName));
-                }
-                if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
-                    long summonerLvl = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
-                    level.setText(summonerLvl+"");
-                }
-            }
-        };
-        mFilter = new IntentFilter();
-        mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION_ACTION);
-        mFilter.addAction(Constants.BROADCAST_SUMMONER_INFO_ACTION);
-        registerReceiver(mReceiver, mFilter);
-        if(mBound){
-            mService.getBestChamp();
-        }
+    private void setupUiComponents() {
+        name = findViewById(R.id.nameView);
+        profileIcon = findViewById(R.id.profileIconView);
+        level = findViewById(R.id.levelView);
+        bestChamp = findViewById(R.id.bestChampView);
+        getInfo = findViewById(R.id.getInfoButton);
+        changeName = findViewById(R.id.main_activity_change_name_button);
+        champImage = findViewById(R.id.champIcon);
+        liveGame = findViewById(R.id.goToLive);
+    }
 
-        updateUI();
+    // Calls all relevant services to gather information about current summoner
+    private void callServices() {
+        mService.getBestChamp();
     }
 
     private void updateUI() {
@@ -143,6 +157,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // Source: https://xjaphx.wordpress.com/2011/10/02/store-and-use-files-in-assets/
+    private Drawable loadChampImageFromAssets(String champName) {
+        // load image
+        try {
+            // get input stream
+            InputStream ims = getAssets().open("champion/" + champName + ".png");
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            return d;
+        }
+        catch(IOException ex) {
+            return null;
+        }
+    }
+
+    /*
+        System callbacks
+    */
     @Override
     protected void onStart(){
         super.onStart();
@@ -169,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
             CommunicationService.LocalBinder binder = (CommunicationService.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
+            callServices();
         }
 
         @Override

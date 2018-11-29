@@ -20,6 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
+import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,12 +72,15 @@ public class CommunicationService extends Service {
                         Log.d(LOG,"Response: " + response.toString());
                         Intent intent = new Intent(Constants.BROADCAST_SUMMONER_INFO_ACTION);
                         try {
-                            saveId(response.getLong("id"));
+
                             String name = response.getString("name");
                             long summonerLvl = response.getLong("summonerLevel");
-                            Log.d(LOG, summonerLvl+"");
+                            long summonerId = response.getLong("id");
+                            saveId(summonerId);
+                            //Log.d(LOG, summonerLvl+"");
                             intent.putExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA, summonerLvl);
                             intent.putExtra(Constants.SUMMONER_NAME, name);
+                            intent.putExtra(Constants.SUMMONER_ID, summonerId);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -98,9 +102,7 @@ public class CommunicationService extends Service {
     }
 
     // Save id for future api calls
-    private void saveId(long id){
-        summonerId = id;
-    }
+    private void saveId(long id){ summonerId = id; }
     //endregion
 
     //region championRequests methods

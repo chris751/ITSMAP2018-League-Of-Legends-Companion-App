@@ -16,11 +16,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
+import com.example.christianmaigaard.lolcompanion.Utilities.Dialog;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
 
 public class EnterSummonerNameActivity extends AppCompatActivity {
@@ -31,13 +34,13 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
     Button findSummonerName;
     EditText enterSummonerName;
+    ProgressBar spinner;
 
     private CommunicationService mService;
     private boolean mBound = false;
 
     private BroadcastReceiver mReceiver;
     private IntentFilter mFilter;
-    private boolean userClickedBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
         // EditText
         enterSummonerName = findViewById(R.id.enter_summoner_name_edit_text);
-
+        spinner = findViewById(R.id.enter_summoner_name_progressbar);
         // Service
         startService(new Intent(this, CommunicationService.class));
         startBroadCastReceiver();
@@ -81,20 +84,30 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                spinner.setVisibility(View.INVISIBLE);
 
                 if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
                     long summonerLevel = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
                     String name = intent.getStringExtra(Constants.SUMMONER_NAME);
+                    long id = intent.getLongExtra(Constants.SUMMONER_ID,0);
                     String error = intent.getStringExtra(Constants.ERROR);
-                    Log.d(LOG, "WOHOO"+ String.valueOf(summonerLevel));
-                    Log.d(LOG, "WOHOO"+ name);
                     if(error != null && !error.isEmpty()) {
-                        // TODO check error type to differentiate between summoner name error and network error
-                        showErrorDialog();
+                        switch (error) {
+                            case Constants.VOLLEY_AUTH_ERROR:
+                                showInvalidAPIkeyDialog();
+                                break;
+                            case Constants.VOLLEY_CONNECTION_ERROR:
+                                showFailedConnectionDialog();
+                                break;
+                            default:
+                                showInvalidSummonerNameErrorDialog();
+                                break;
+                        }
                         return;
                     }
                     Intent i = new Intent(EnterSummonerNameActivity.this, MainActivity.class);
                     i.putExtra(SUMMONER_NAME, name);
+                    i.putExtra(SUMMONER_ID, id);
                     i.putExtra(SUMMONER_LEVEL, summonerLevel);
                     startActivity(i);
                 }
@@ -102,27 +115,29 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
         };
     }
 
-    private void showErrorDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
+    private void showInvalidSummonerNameErrorDialog() {
+        Context c = EnterSummonerNameActivity.this;
+        String title = getString(R.string.invalid_summoner_name);
+        String message = getString(R.string.check_summoner_name_for_correctness);
+        Dialog.showAlertDialog(c, title, message);
+    }
 
-        alertDialog.setTitle("Invalid summoner name");
-        alertDialog.setMessage("Please check if the summoner name is correct");
+    private void showInvalidAPIkeyDialog() {
+        Context c = EnterSummonerNameActivity.this;
+        String title = getString(R.string.invalid_api_key);
+        String message = getString(R.string.please_contact_developers);
+        Dialog.showAlertDialog(c, title, message);
+    }
 
-        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        AlertDialog ad = alertDialog.create();
-        ad.show();
+    private void showFailedConnectionDialog() {
+        Context c = EnterSummonerNameActivity.this;
+        String title = getString(R.string.connection_failed);
+        String message = getString(R.string.please_check_connection);
+        Dialog.showAlertDialog(c, title, message);
     }
 
     private void findNameButtonClicked() {
-
+        spinner.setVisibility(View.VISIBLE);
         String summonerName = enterSummonerName.getText().toString();
         if(mBound){
             mService.createSummonerInfoRequest(summonerName);
@@ -158,7 +173,8 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
             mBound = true;
 
             // if we already stored a summoner
-            if (summonerNameStored() && !userClickedBack){
+            if (summonerNameStored()){
+                //spinner.setVisibility(View.VISIBLE);
                 if(mBound){
                     mService.createSummonerInfoRequest(SharedPrefs.retrieveSummonorNameFromSharedPreferences(EnterSummonerNameActivity.this));
                 }
