@@ -33,6 +33,7 @@ public final class Constants {
     // Intent identifiers
     public static final String SUMMONER_NAME = "SummonorName";
     public static final String SUMMONER_LEVEL = "SummonerLevel";
+    public static final String SUMMONER_ID = "SummonerID";
     public static final String ERROR = "Error";
 
     // Volley erros

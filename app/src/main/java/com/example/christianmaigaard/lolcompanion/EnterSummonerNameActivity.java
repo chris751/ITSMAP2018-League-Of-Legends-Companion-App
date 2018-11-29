@@ -22,6 +22,7 @@ import com.example.christianmaigaard.lolcompanion.Utilities.Dialog;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
 
 public class EnterSummonerNameActivity extends AppCompatActivity {
@@ -38,7 +39,6 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
     private BroadcastReceiver mReceiver;
     private IntentFilter mFilter;
-    private boolean userClickedBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
                 if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
                     long summonerLevel = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
                     String name = intent.getStringExtra(Constants.SUMMONER_NAME);
+                    long id = intent.getLongExtra(Constants.SUMMONER_ID,0);
                     String error = intent.getStringExtra(Constants.ERROR);
                     if(error != null && !error.isEmpty()) {
                         switch (error) {
@@ -103,6 +104,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
                     }
                     Intent i = new Intent(EnterSummonerNameActivity.this, MainActivity.class);
                     i.putExtra(SUMMONER_NAME, name);
+                    i.putExtra(SUMMONER_ID, id);
                     i.putExtra(SUMMONER_LEVEL, summonerLevel);
                     startActivity(i);
                 }
@@ -168,7 +170,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
             mBound = true;
 
             // if we already stored a summoner
-            if (summonerNameStored() && !userClickedBack){
+            if (summonerNameStored()){
                 if(mBound){
                     mService.createSummonerInfoRequest(SharedPrefs.retrieveSummonorNameFromSharedPreferences(EnterSummonerNameActivity.this));
                 }

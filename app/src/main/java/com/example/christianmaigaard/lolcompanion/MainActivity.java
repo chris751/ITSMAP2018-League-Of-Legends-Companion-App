@@ -21,6 +21,7 @@ import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
 import static com.example.christianmaigaard.lolcompanion.EnterSummonerNameActivity.SUMMONER_NAME;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     // Variables
     private String summonerName;
     private long summonerLevel;
+    private long summonerID;
     // Services
     private CommunicationService mService;
     private boolean mBound = false;
@@ -58,7 +60,12 @@ public class MainActivity extends AppCompatActivity {
         getDataFromSummonerNameActivity();
 
         // Save summoner name in sharedpreferences
-        SharedPrefs.storeSummonerNameInSharedPreferences(this, summonerName);;
+        SharedPrefs.storeSummonerNameInSharedPreferences(this, summonerName);
+        SharedPrefs.storeSummonerIdInSharedPreferences(this, summonerID);
+
+//        long summId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(this);
+  //      String summName = SharedPrefs.retrieveSummonorNameFromSharedPreferences(this);
+
 
         // Start services
         startService(new Intent(this, CommunicationService.class));
@@ -71,9 +78,10 @@ public class MainActivity extends AppCompatActivity {
     private void getDataFromSummonerNameActivity() {
         // Code inspired heavily from "intentClassExample"
         // Fetch data from "EnterSummonerNameActivity"
-        Intent dataFromSummonerNameActivity = getIntent();
-        summonerName = dataFromSummonerNameActivity.getStringExtra(SUMMONER_NAME);
-        summonerLevel = dataFromSummonerNameActivity.getLongExtra(SUMMONER_LEVEL,0);
+        Bundle extras = getIntent().getExtras();
+        summonerName = extras.getString(SUMMONER_NAME);
+        summonerLevel = extras.getLong(SUMMONER_LEVEL,0);
+        summonerID = extras.getLong(SUMMONER_ID,0);
     }
 
     private void registerIntentFilter() {
