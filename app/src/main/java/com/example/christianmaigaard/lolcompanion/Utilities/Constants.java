@@ -21,12 +21,15 @@ public final class Constants {
     public static final String BROADCAST_BEST_CHAMPION_ACTION = "BEST_CHAMPION";
     public static final String BROADCAST_SUMMONER_INFO_ACTION = "SUMMONER_INFO";
     public static final String BROADCAST_GAME_PARTICIPANTS_ACTION = "GAME_PARTICIPANTS";
+    public static final String BROADCAST_CURRENT_CHAMP_MASTERY_ACTION = "CURRENT_CHAMP_MASTERY_ACTION";
 
     // EXTRAS
     public static final String BEST_CHAMPION_EXTRA = "BEST_CHAMPION_EXTRA";
     public static final String SUMMONER_INFO_LEVEL_EXTRA = "SUMMONER_INFO_LEVEL_EXTRA";
     public static final String GAME_PARTICIPANTS_EXTRA = "GAME_PARTICIPANTS_EXTRA";
-    public static final String LIVE_SUMMONER_INFO = "LIVE_SUMMONER_INFO";
+    public static final String LIVE_SUMMONER_INFO_EXTRA = "LIVE_SUMMONER_INFO_EXTRA";
+    public static final String CURRENT_CHAMP_MASTERY_EXTRA = "CURRENT_CHAMP_MASTERY_EXTRA";
+
 
     // Preferences
     public static final String SHARED_PREFERENCES = "UserPreferences";
@@ -41,6 +44,14 @@ public final class Constants {
     public static final String VOLLEY_AUTH_ERROR = "com.android.volley.AuthFailureError";
     public static final String VOLLEY_CONNECTION_ERROR = "com.android.volley.NoConnectionError: java.net.UnknownHostException: Unable to resolve host \"euw1.api.riotgames.com\": No address associated with hostname";
 
-
-
+    // Champion mastery ratings
+    public static final int CHAMPION_LEVEL_0 = 0;
+    public static final int CHAMPION_LEVEL_1 = 1800;
+    public static final int CHAMPION_LEVEL_2 = 6000;
+    public static final int CHAMPION_LEVEL_3 = 12600;
+    public static final int CHAMPION_LEVEL_4 = 21600;
+    public static final int CHAMPION_LEVEL_5 = 35000;
+    public static final int CHAMPION_LEVEL_6 = 50000;
+    public static final int CHAMPION_LEVEL_7 = 100000;
+    public static final int CHAMPION_LEVEL_CRAZY = 1000000;
 }

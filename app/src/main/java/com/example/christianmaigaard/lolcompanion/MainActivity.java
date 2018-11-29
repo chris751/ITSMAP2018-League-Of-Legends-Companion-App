@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION_ACTION)){
                     String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_EXTRA);
                     bestChamp.setText(bestChampName);
-                    champImage.setImageDrawable(loadChampImageFromAssets(bestChampName));
+                    champImage.setImageDrawable(AssetHelper.loadChampImageFromAssets(MainActivity.this, bestChampName)); // TODO: Denne metode bør køres med Champion alias og ikke navn
                 }
                 if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
                     long summonerLvl = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
@@ -154,22 +154,6 @@ public class MainActivity extends AppCompatActivity {
     private void updateUI() {
         name.setText(summonerName);
         level.setText(String.valueOf(summonerLevel));
-    }
-
-
-    // Source: https://xjaphx.wordpress.com/2011/10/02/store-and-use-files-in-assets/
-    private Drawable loadChampImageFromAssets(String champName) {
-        // load image
-        try {
-            // get input stream
-            InputStream ims = getAssets().open("champion/" + champName + ".png");
-            // load image as Drawable
-            Drawable d = Drawable.createFromStream(ims, null);
-            return d;
-        }
-        catch(IOException ex) {
-            return null;
-        }
     }
 
     /*

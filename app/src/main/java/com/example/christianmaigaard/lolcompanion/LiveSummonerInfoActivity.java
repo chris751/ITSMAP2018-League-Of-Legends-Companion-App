@@ -1,6 +1,12 @@
 package com.example.christianmaigaard.lolcompanion;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
+import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
 import com.example.christianmaigaard.lolcompanion.Utilities.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 
@@ -19,6 +26,14 @@ public class LiveSummonerInfoActivity extends AppCompatActivity {
     TextView summonerName;
     TextView championName;
     TextView masteryInfo;
+
+    private CommunicationService mService;
+    private boolean mBound = false;
+
+    private BroadcastReceiver mReceiver;
+    private IntentFilter mFilter;
+
+    Participant participant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +54,59 @@ public class LiveSummonerInfoActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        Participant participant = (Participant) intent.getExtras().get(Constants.LIVE_SUMMONER_INFO);
+        participant = (Participant) intent.getExtras().get(Constants.LIVE_SUMMONER_INFO_EXTRA);
 
         champIcon.setImageDrawable(AssetHelper.loadChampImageFromAssets(this, participant.getChampionAlias()));
         summonerName.setText(participant.getSummonerName());
         championName.setText(participant.getChampionName());
 
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(Constants.BROADCAST_CURRENT_CHAMP_MASTERY_ACTION)){
+                    masteryInfo.setText(intent.getStringExtra(Constants.CURRENT_CHAMP_MASTERY_EXTRA));
+                }
+            }
+        };
+        mFilter = new IntentFilter();
+        mFilter.addAction(Constants.BROADCAST_CURRENT_CHAMP_MASTERY_ACTION);
+        registerReceiver(mReceiver, mFilter);
+    }
 
-        // TODO: lav et get på personens champion mastery, og find den der matcher med nuværende champ ID.. og fortæl hans mastery score,, måske ikke direkte men, at han er så og så god eller dårlig
+    @Override
+    protected void onStart(){
+        super.onStart();
+        Intent intent = new Intent(this, CommunicationService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        unbindService(connection);
+        mBound = false;
+    }
+
+    private ServiceConnection connection = new ServiceConnection(){
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            CommunicationService.LocalBinder binder = (CommunicationService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+            mService.createCurrentChampionMasteryRequest(participant.getSummonerId(), participant.getChampionId());
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+
+    };
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 }

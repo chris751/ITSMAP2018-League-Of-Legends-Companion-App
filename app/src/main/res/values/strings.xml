@@ -12,4 +12,16 @@
     <string name="please_contact_developers">Please contact the developers!</string>
     <string name="connection_failed">Connection failed</string>
     <string name="please_check_connection">Please check your internet connection</string>
+
+    <string name="champion_level_0">Never played the champion before</string>
+    <string name="champion_level_1">Has played the champion a couple of times</string>
+    <string name="champion_level_2">Is starting to get a feel for the champion</string>
+    <string name="champion_level_3">Knows the spell ranges and effects quite well</string>
+    <string name="champion_level_4">Besides the active spells, the awareness of the passive stats are increasing steadily</string>
+    <string name="champion_level_5">Plays the champion to a level matching the players ranking</string>
+    <string name="champion_level_6">Summoner likes this champ quite a lot, take care for cheeky plays</string>
+    <string name="champion_level_7">Summoners main champ or one of them, knows the ins and outs of the mechanics</string>
+    <string name="champion_level_8">Be very careful one trick potential, watch any sudden movements, do not get baited</string>
+    <string name="champion_level_9">Most likely a god. Definitely a One Trick. FF15</string>
+
 </resources>

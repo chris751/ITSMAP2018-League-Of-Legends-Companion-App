@@ -76,7 +76,6 @@ public class CommunicationService extends Service {
                             String name = response.getString("name");
                             long summonerLvl = response.getLong("summonerLevel");
                             long summonerId = response.getLong("id");
-                            saveId(summonerId);
                             //Log.d(LOG, summonerLvl+"");
                             intent.putExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA, summonerLvl);
                             intent.putExtra(Constants.SUMMONER_NAME, name);
@@ -100,29 +99,24 @@ public class CommunicationService extends Service {
                 });
         queue.add(jsonObjectRequest);
     }
-
-    // Save id for future api calls
-    private void saveId(long id){ summonerId = id; }
     //endregion
 
-    //region championRequests methods
+    //region bestChampionRequests methods
     public void getBestChamp(){
-        createChampionMastoryRequest(summonerId);
-    }
-
-    private void createChampionMastoryRequest(long summonerID){
+        long summonerID = SharedPrefs.retrieveSummonorIdFromSharedPreferences(this);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + summonerID + Constants.API_KEY, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        try{
-                            JSONObject firstObject = (JSONObject)response.get(0);
+                        try {
+                            JSONObject firstObject = (JSONObject) response.get(0);
                             long firstObjectId = firstObject.getLong("championId");
                             createChampionNameByIdRequest(firstObjectId);
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
                             Log.d(LOG, e.toString());
                             e.printStackTrace();
                         }
+
                     }
                 },
                 new Response.ErrorListener(){
@@ -134,7 +128,6 @@ public class CommunicationService extends Service {
         );
         queue.add(jsonArrayRequest);
     }
-
 
     public void createChampionNameByIdRequest(long championId){
         String url = Constants.COMMUNITY_DRAGON_CHAMPION_URL;
@@ -248,5 +241,73 @@ public class CommunicationService extends Service {
         queue.add(request);
     }
 
+
+
+    public void createCurrentChampionMasteryRequest(long summonerId, final long championId){
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    Log.d("yoyoyo", "array stedet");
+                    findCurrentChamp(response,championId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        Log.d(LOG, error.toString());
+                    }
+                }
+        );
+        queue.add(jsonArrayRequest);
+    }
+
+    private void findCurrentChamp(JSONArray champArray,long championId) throws JSONException {
+        for(int i = 0; i < champArray.length(); i++){
+            JSONObject champion = (JSONObject) champArray.get(i);
+            long fromArrayId = champion.getLong("championId");
+            if(fromArrayId == championId){
+                Log.d("yoyoyo", "fundet en champ stedet");
+                processCurrentChampInfo(champion);
+                return;
+            }
+        }
+    }
+
+    private void processCurrentChampInfo(JSONObject champion) throws JSONException {
+        int championPoints = champion.getInt("championPoints");
+        String summonerSkillInfo = "";
+
+        if(championPoints == Constants.CHAMPION_LEVEL_0){
+            summonerSkillInfo = getString(R.string.champion_level_0);
+        } else if(Constants.CHAMPION_LEVEL_0 < championPoints && championPoints < Constants.CHAMPION_LEVEL_1){
+            summonerSkillInfo = getString(R.string.champion_level_1);
+        } else if(Constants.CHAMPION_LEVEL_1 < championPoints && championPoints < Constants.CHAMPION_LEVEL_2){
+            summonerSkillInfo = getString(R.string.champion_level_2);
+        } else if(Constants.CHAMPION_LEVEL_2 < championPoints && championPoints < Constants.CHAMPION_LEVEL_3){
+            summonerSkillInfo = getString(R.string.champion_level_3);
+        } else if(Constants.CHAMPION_LEVEL_3 < championPoints && championPoints < Constants.CHAMPION_LEVEL_4){
+            summonerSkillInfo = getString(R.string.champion_level_4);
+        } else if(Constants.CHAMPION_LEVEL_4 < championPoints && championPoints < Constants.CHAMPION_LEVEL_5){
+            summonerSkillInfo = getString(R.string.champion_level_5);
+        } else if(Constants.CHAMPION_LEVEL_5 < championPoints && championPoints < Constants.CHAMPION_LEVEL_6){
+            summonerSkillInfo = getString(R.string.champion_level_6);
+        } else if(Constants.CHAMPION_LEVEL_6 < championPoints && championPoints < Constants.CHAMPION_LEVEL_7){
+            summonerSkillInfo = getString(R.string.champion_level_7);
+        } else if(Constants.CHAMPION_LEVEL_7 < championPoints && championPoints < Constants.CHAMPION_LEVEL_CRAZY){
+            summonerSkillInfo = getString(R.string.champion_level_8);
+        }
+
+        Intent intent = new Intent(Constants.BROADCAST_CURRENT_CHAMP_MASTERY_ACTION);
+        intent.putExtra(Constants.CURRENT_CHAMP_MASTERY_EXTRA, summonerSkillInfo);
+
+        Log.d("yoyoyo", "sender broadcast stedet");
+
+        sendBroadcast(intent);
+    }
 
 }

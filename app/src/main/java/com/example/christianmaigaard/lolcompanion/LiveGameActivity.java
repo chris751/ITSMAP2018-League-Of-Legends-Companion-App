@@ -1,13 +1,11 @@
 package com.example.christianmaigaard.lolcompanion;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.christianmaigaard.lolcompanion.Adapter.BlueTeamListAdapter;
@@ -23,9 +20,6 @@ import com.example.christianmaigaard.lolcompanion.Adapter.RedTeamListAdapter;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
 import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
@@ -62,8 +56,10 @@ public class LiveGameActivity extends AppCompatActivity {
         getParticipants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long summonerId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(LiveGameActivity.this);
-                mService.createActiveGameRequest();
+                if(mBound){
+                    long summonerId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(LiveGameActivity.this);
+                    mService.createActiveGameRequest(summonerId);
+                }
             }
         });
 
@@ -111,7 +107,7 @@ public class LiveGameActivity extends AppCompatActivity {
                 Participant participant = blueTeam.get(position);
                 Intent intent = new Intent(LiveGameActivity.this, LiveSummonerInfoActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(Constants.LIVE_SUMMONER_INFO, participant);
+                bundle.putSerializable(Constants.LIVE_SUMMONER_INFO_EXTRA, participant);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -125,7 +121,7 @@ public class LiveGameActivity extends AppCompatActivity {
                 Participant participant = redTeam.get(position);
                 Intent intent = new Intent(LiveGameActivity.this, LiveSummonerInfoActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(Constants.LIVE_SUMMONER_INFO, participant);
+                bundle.putSerializable(Constants.LIVE_SUMMONER_INFO_EXTRA, participant);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -157,6 +153,9 @@ public class LiveGameActivity extends AppCompatActivity {
             CommunicationService.LocalBinder binder = (CommunicationService.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
+            
+            long summonerId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(LiveGameActivity.this);
+            mService.createActiveGameRequest(summonerId);
         }
 
         @Override
