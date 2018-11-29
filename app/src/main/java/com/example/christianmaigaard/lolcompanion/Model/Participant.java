@@ -1,10 +1,18 @@
 package com.example.christianmaigaard.lolcompanion.Model;
 
-public class Participant {
+import android.graphics.drawable.Drawable;
+
+import java.io.Serializable;
+
+public class Participant implements Serializable {
 
     long summonerId;
     String summonerName;
     long championId;
+    String championName;
+    String championAlias;
+    Drawable champIcon;
+
 
     public Participant(long summonerId, String summonerName, long championId){
         this.summonerId = summonerId;
@@ -23,4 +31,29 @@ public class Participant {
     public long getChampionId(){
         return championId;
     }
+
+    public String getChampionName(){
+        return championName;
+    }
+
+    public void setChampionName(String champName){
+        this.championName = champName;
+    }
+
+    public Drawable getChampIcon(){
+        return champIcon;
+    }
+
+    public void setChampIcon(Drawable champIcon){
+        this.champIcon = champIcon;
+    }
+
+    public String getChampionAlias(){
+        return championAlias;
+    }
+
+    public void setChampionAlias(String championAlias){
+        this.championAlias = championAlias;
+    }
+
 }
