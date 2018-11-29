@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.christianmaigaard.lolcompanion.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
 import com.example.christianmaigaard.lolcompanion.R;
 
@@ -65,8 +66,9 @@ public class BlueTeamListAdapter extends BaseAdapter {
             TextView summonerName = (TextView) convertView.findViewById(R.id.summonerName);
             summonerName.setText(participant.getSummonerName());
 
+
             ImageView champIcon = (ImageView) convertView.findViewById(R.id.champIcon);
-            champIcon.setImageDrawable(participant.getChampIcon());
+            champIcon.setImageDrawable(AssetHelper.loadChampImageFromAssets(context,participant.getChampionAlias()));
         }
         return convertView;
     }

@@ -26,7 +26,8 @@
             android:exported="true" />
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".LiveGameActivity"></activity>
+        <activity android:name=".LiveGameActivity" />
+        <activity android:name=".LiveSummonerInfoActivity"></activity>
     </application>
 
 </manifest>

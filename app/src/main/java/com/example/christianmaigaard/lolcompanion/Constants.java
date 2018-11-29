@@ -28,5 +28,6 @@ public final class Constants {
     public static final String BEST_CHAMPION_EXTRA = "BEST_CHAMPION_EXTRA";
     public static final String SUMMONER_INFO_LEVEL_EXTRA = "SUMMONER_INFO_LEVEL_EXTRA";
     public static final String GAME_PARTICIPANTS_EXTRA = "GAME_PARTICIPANTS_EXTRA";
+    public static final String LIVE_SUMMONER_INFO = "LIVE_SUMMONER_INFO";
 
 }

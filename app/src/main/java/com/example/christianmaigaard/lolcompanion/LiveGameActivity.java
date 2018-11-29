@@ -59,7 +59,7 @@ public class LiveGameActivity extends AppCompatActivity {
         getParticipants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mService.createActiveGameRequest(106488919);
+                mService.createActiveGameRequest(226141);
             }
         });
 
@@ -71,9 +71,9 @@ public class LiveGameActivity extends AppCompatActivity {
                     playerList = wrappedList.getPlayerList();
 
                     //Run through playerList and save the image for current champion
-                    for(int i = 0; i < playerList.size(); i++){
+                    /*for(int i = 0; i < playerList.size(); i++){
                         playerList.get(i).setChampIcon(loadChampImageFromAssets(playerList.get(i).getChampionAlias()));
-                    }
+                    }*/
                     setupList();
                 }
 
@@ -86,8 +86,8 @@ public class LiveGameActivity extends AppCompatActivity {
 
     private void setupList(){
         // Setup up two lists, one for blue team one for red team
-        ArrayList<Participant> blueTeam = new ArrayList<Participant>();
-        ArrayList<Participant> redTeam = new ArrayList<Participant>();
+        final ArrayList<Participant> blueTeam = new ArrayList<Participant>();
+        final ArrayList<Participant> redTeam = new ArrayList<Participant>();
 
         // First half is blue team, second hals is red
         for(int i = 0; i < playerList.size()/2; i++){
@@ -104,6 +104,12 @@ public class LiveGameActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("PlayerList", "SUCK DICK");
+                Participant participant = blueTeam.get(position);
+                Intent intent = new Intent(LiveGameActivity.this, LiveSummonerInfoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constants.LIVE_SUMMONER_INFO, participant);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
         redTeamListAdapter = new RedTeamListAdapter(LiveGameActivity.this, redTeam);
@@ -112,9 +118,20 @@ public class LiveGameActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("PlayerList", "Suck red dick");
+                Participant participant = redTeam.get(position);
+                Intent intent = new Intent(LiveGameActivity.this, LiveSummonerInfoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constants.LIVE_SUMMONER_INFO, participant);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
+
+    private void goToLiveSummonerInfoActivity(){
+
+    }
+
 
     @Override
     protected void onStart(){
@@ -145,18 +162,9 @@ public class LiveGameActivity extends AppCompatActivity {
 
     };
 
-    // Source: https://xjaphx.wordpress.com/2011/10/02/store-and-use-files-in-assets/
-    private Drawable loadChampImageFromAssets(String champName){
-        // load image
-        try {
-            // get input stream
-            InputStream ims = getAssets().open("champion/" + champName + ".png");
-            // load image as Drawable
-            Drawable d = Drawable.createFromStream(ims, null);
-            return d;
-        }
-        catch(IOException ex) {
-            return null;
-        }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 }

@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.christianmaigaard.lolcompanion.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
 import com.example.christianmaigaard.lolcompanion.R;
 
@@ -67,12 +68,7 @@ public class RedTeamListAdapter extends BaseAdapter {
             summonerName.setText(participant.getSummonerName());
 
             ImageView champIcon = (ImageView) convertView.findViewById(R.id.champIcon);
-            /*Drawable dr = participant.getChampIcon();
-            Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
-
-            Drawable d = new BitmapDrawable(bitmap.createScaledBitmap(bitmap,500,500,true));
-*/
-            champIcon.setImageDrawable(participant.getChampIcon());
+            champIcon.setImageDrawable(AssetHelper.loadChampImageFromAssets(context,participant.getChampionAlias()));
         }
         return convertView;
     }

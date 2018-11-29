@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,8 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import static com.example.christianmaigaard.lolcompanion.EnterSummonerNameActivity.SUMMONER_NAME;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION_ACTION)){
                     String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_EXTRA);
                     bestChamp.setText(bestChampName);
-                    champImage.setImageDrawable(loadChampImageFromAssets(bestChampName));
+                    champImage.setImageDrawable(AssetHelper.loadChampImageFromAssets(MainActivity.this, bestChampName));
                 }
                 if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
                     long summonerLvl = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
@@ -135,19 +132,4 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
-
-    // Source: https://xjaphx.wordpress.com/2011/10/02/store-and-use-files-in-assets/
-    private Drawable loadChampImageFromAssets(String champName){
-        // load image
-        try {
-            // get input stream
-            InputStream ims = getAssets().open("champion/" + champName + ".png");
-            // load image as Drawable
-            Drawable d = Drawable.createFromStream(ims, null);
-            return d;
-        }
-        catch(IOException ex) {
-            return null;
-        }
-    }
 }
