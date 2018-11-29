@@ -18,7 +18,7 @@ public class SharedPrefs {
         SharedPreferences.Editor editor = pref.edit();
 
         editor.putString(SUMMONER_NAME, summonerName); // Storing string
-        editor.commit(); // commit changes
+        editor.apply(); // commit changes
     }
 
     public static void storeSummonerIdInSharedPreferences(Context c, long summonerId) {
@@ -27,7 +27,7 @@ public class SharedPrefs {
         SharedPreferences.Editor editor = pref.edit();
 
         editor.putLong(SUMMONER_ID, summonerId);
-        editor.commit(); // commit changes
+        editor.apply(); // commit changes
     }
 
     public static String retrieveSummonorNameFromSharedPreferences(Context c) {
@@ -42,6 +42,6 @@ public class SharedPrefs {
 
     public static void deleteSummonerName(Context c) {
         SharedPreferences preferences = c.getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, 0);
-        preferences.edit().remove(SUMMONER_NAME).commit();
+        preferences.edit().remove(SUMMONER_NAME).apply();
     }
 }
