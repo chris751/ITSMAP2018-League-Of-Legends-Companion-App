@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
+import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 
 public class LiveSummonerInfoActivity extends AppCompatActivity {
 

@@ -3,7 +3,6 @@ package com.example.christianmaigaard.lolcompanion;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Region;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -19,6 +18,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
+import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
 
 import org.json.JSONArray;
@@ -31,6 +31,7 @@ import java.util.ArrayList;
 public class CommunicationService extends Service {
 
     // TODO: når man logger ind, vil det være en god idé at gemme SummonerID da det bliver brugt til en del api kald
+    private static String LOG = "CommunicationService";
 
     private long summonerId;
 
@@ -67,13 +68,15 @@ public class CommunicationService extends Service {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("requestResponse","Response: " + response.toString());
+                        Log.d(LOG,"Response: " + response.toString());
                         Intent intent = new Intent(Constants.BROADCAST_SUMMONER_INFO_ACTION);
                         try {
                             saveId(response.getLong("id"));
+                            String name = response.getString("name");
                             long summonerLvl = response.getLong("summonerLevel");
-                            Log.d("requestResponse", summonerLvl+"");
+                            Log.d(LOG, summonerLvl+"");
                             intent.putExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA, summonerLvl);
+                            intent.putExtra(Constants.SUMMONER_NAME, name);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -83,11 +86,12 @@ public class CommunicationService extends Service {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("requestResponse", "Der skete en fejl");
-                        Log.d("requestResponse", error.toString());
-
-                        // TODO: Handle error
-
+                        Log.d(LOG, "SummonerInfoRequest error");
+                        Log.d(LOG, error.toString());
+                        // Broadcast error to receivers
+                        Intent intent = new Intent(Constants.BROADCAST_SUMMONER_INFO_ACTION);
+                        intent.putExtra(Constants.ERROR, error.toString());
+                        sendBroadcast(intent);
                     }
                 });
         queue.add(jsonObjectRequest);
@@ -101,7 +105,7 @@ public class CommunicationService extends Service {
 
     //region championRequests methods
     public void getBestChamp(){
-        createChampionMastoryRequest(42817870);
+        createChampionMastoryRequest(summonerId);
     }
 
     private void createChampionMastoryRequest(long summonerID){
@@ -114,7 +118,7 @@ public class CommunicationService extends Service {
                             long firstObjectId = firstObject.getLong("championId");
                             createChampionNameByIdRequest(firstObjectId);
                         }catch (JSONException e){
-                            Log.d("requestResponse", e.toString());
+                            Log.d(LOG, e.toString());
                             e.printStackTrace();
                         }
                     }
@@ -122,7 +126,7 @@ public class CommunicationService extends Service {
                 new Response.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error){
-                        Log.d("requestRespone", error.toString());
+                        Log.d(LOG, error.toString());
                     }
                 }
         );
@@ -149,8 +153,8 @@ public class CommunicationService extends Service {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("requestResponse", "Der skete en fejl");
-                Log.d("requestResponse", error.toString());
+                Log.d(LOG, "Der skete en fejl");
+                Log.d(LOG, error.toString());
 
                 // TODO: Handle error
 

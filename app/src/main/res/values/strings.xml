@@ -3,4 +3,6 @@
     <string name="title_activity_enter_summoner_name">EnterSummonerNameActivity</string>
     <string name="enter_summoner_name_activity_enter_summoner_name">Enter summoner name</string>
     <string name="enter_summoner_name_activity_find_button">Find</string>
+    <string name="summoner_level">Level</string>
+    <string name="most_played_champion">Most played champion</string>
 </resources>

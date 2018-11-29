@@ -1,4 +1,4 @@
-package com.example.christianmaigaard.lolcompanion;
+package com.example.christianmaigaard.lolcompanion.Utilities;
 
 public final class Constants {
     // Api key: Has to be updated every 24 hours atm.
@@ -29,5 +29,14 @@ public final class Constants {
     public static final String SUMMONER_INFO_LEVEL_EXTRA = "SUMMONER_INFO_LEVEL_EXTRA";
     public static final String GAME_PARTICIPANTS_EXTRA = "GAME_PARTICIPANTS_EXTRA";
     public static final String LIVE_SUMMONER_INFO = "LIVE_SUMMONER_INFO";
+
+    // Preferences
+    public static final String SHARED_PREFERENCES = "UserPreferences";
+
+    // Intent identifiers
+    public static final String SUMMONER_NAME = "SummonorName";
+    public static final String SUMMONER_LEVEL = "SummonerLevel";
+    public static final String ERROR = "Error";
+
 
 }

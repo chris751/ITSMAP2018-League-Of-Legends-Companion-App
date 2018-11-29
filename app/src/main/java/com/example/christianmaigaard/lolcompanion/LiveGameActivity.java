@@ -28,6 +28,8 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
+
 public class LiveGameActivity extends AppCompatActivity {
 
     ArrayList<Participant> playerList;
