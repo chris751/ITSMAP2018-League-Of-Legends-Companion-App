@@ -29,6 +29,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
+import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
 public class LiveGameActivity extends AppCompatActivity {
 
@@ -61,7 +62,8 @@ public class LiveGameActivity extends AppCompatActivity {
         getParticipants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mService.createActiveGameRequest(226141);
+                long summonerId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(LiveGameActivity.this);
+                mService.createActiveGameRequest();
             }
         });
 

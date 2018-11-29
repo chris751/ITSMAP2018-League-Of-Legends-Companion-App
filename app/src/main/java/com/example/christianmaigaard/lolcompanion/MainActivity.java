@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.christianmaigaard.lolcompanion.Utilities.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 

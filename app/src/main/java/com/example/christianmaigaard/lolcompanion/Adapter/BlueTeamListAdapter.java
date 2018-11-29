@@ -1,16 +1,14 @@
 package com.example.christianmaigaard.lolcompanion.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.christianmaigaard.lolcompanion.AssetHelper;
+import com.example.christianmaigaard.lolcompanion.Utilities.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
 import com.example.christianmaigaard.lolcompanion.R;
 

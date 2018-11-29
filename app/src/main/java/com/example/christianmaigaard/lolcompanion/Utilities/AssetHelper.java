@@ -1,4 +1,4 @@
-package com.example.christianmaigaard.lolcompanion;
+package com.example.christianmaigaard.lolcompanion.Utilities;
 
 import android.app.Activity;
 import android.app.Application;
