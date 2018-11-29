@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.christianmaigaard.lolcompanion.Utilities.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private String summonerName;
     private long summonerLevel;
     private long summonerID;
+    private boolean mIsInGame = false;
     // Services
     private CommunicationService mService;
     private boolean mBound = false;
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         mFilter = new IntentFilter();
         mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION_ACTION);
         mFilter.addAction(Constants.BROADCAST_SUMMONER_INFO_ACTION);
+        mFilter.addAction(Constants.BROADCAST_IS_IN_GAME_ACTION);
         registerReceiver(mReceiver, mFilter);
     }
 
@@ -105,10 +108,22 @@ public class MainActivity extends AppCompatActivity {
                     long summonerLvl = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
                     level.setText(summonerLvl+"");
                 }
+                if(intent.getAction().equals(Constants.BROADCAST_IS_IN_GAME_ACTION)){
+                    processInGameStatus(intent.getBooleanExtra(Constants.IS_IN_GAME_EXTRA,false));
+                }
             }
         };
     }
 
+    private void processInGameStatus(boolean isInGame){
+        if(isInGame && !this.mIsInGame){
+            mIsInGame = isInGame;
+            goToLiveGameActivity();
+        } else if(!isInGame && this.mIsInGame){
+            mIsInGame = isInGame;
+        }
+    }
+    
     private void setButtonOnClickListeners() {
         changeName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,10 +144,18 @@ public class MainActivity extends AppCompatActivity {
         liveGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LiveGameActivity.class);
-                startActivity(intent);
+                if(mIsInGame){
+                    goToLiveGameActivity();
+                } else{
+                    Toast.makeText(MainActivity.this, R.string.not_in_game, Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+    
+    private void goToLiveGameActivity(){
+        Intent intent = new Intent(MainActivity.this, LiveGameActivity.class);
+        startActivity(intent);
     }
 
     private void setupUiComponents() {

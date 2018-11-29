@@ -27,9 +27,8 @@ import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
 public class LiveGameActivity extends AppCompatActivity {
 
-    ArrayList<Participant> playerList;
-
     Button getParticipants;
+    Button backBtn;
 
     BlueTeamListAdapter blueTeamListAdapter;
     ListView blueListView;
@@ -51,7 +50,8 @@ public class LiveGameActivity extends AppCompatActivity {
         blueListView = findViewById(R.id.blueTeamList);
         redListView = findViewById(R.id.redTeamList);
 
-        getParticipants = findViewById(R.id.hejsa);
+        getParticipants = findViewById(R.id.getPlayers);
+        backBtn = findViewById(R.id.backBtn);
 
         getParticipants.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,18 +63,20 @@ public class LiveGameActivity extends AppCompatActivity {
             }
         });
 
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent.getAction().equals(Constants.BROADCAST_GAME_PARTICIPANTS_ACTION)){
                     ParticipantsWrapper wrappedList = (ParticipantsWrapper) intent.getExtras().get(Constants.GAME_PARTICIPANTS_EXTRA);
-                    playerList = wrappedList.getPlayerList();
-
-                    //Run through playerList and save the image for current champion
-                    /*for(int i = 0; i < playerList.size(); i++){
-                        playerList.get(i).setChampIcon(loadChampImageFromAssets(playerList.get(i).getChampionAlias()));
-                    }*/
-                    setupList();
+                    ArrayList<Participant> playerList = wrappedList.getPlayerList();
+                    setupList(playerList);
                 }
 
             }
@@ -84,7 +86,7 @@ public class LiveGameActivity extends AppCompatActivity {
         registerReceiver(mReceiver, mFilter);
     }
 
-    private void setupList(){
+    private void setupList(ArrayList<Participant> playerList){
         // Setup up two lists, one for blue team one for red team
         final ArrayList<Participant> blueTeam = new ArrayList<Participant>();
         final ArrayList<Participant> redTeam = new ArrayList<Participant>();
@@ -97,41 +99,40 @@ public class LiveGameActivity extends AppCompatActivity {
             redTeam.add(playerList.get(i));
         }
 
-
+        // Create layout for blue team
         blueTeamListAdapter = new BlueTeamListAdapter(LiveGameActivity.this, blueTeam);
         blueListView.setAdapter(blueTeamListAdapter);
         blueListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("PlayerList", "SUCK DICK");
                 Participant participant = blueTeam.get(position);
-                Intent intent = new Intent(LiveGameActivity.this, LiveSummonerInfoActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(Constants.LIVE_SUMMONER_INFO_EXTRA, participant);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                goToLiveSummonerInfoActivity(participant);
             }
         });
+        // Create layout for red team
         redTeamListAdapter = new RedTeamListAdapter(LiveGameActivity.this, redTeam);
         redListView.setAdapter(redTeamListAdapter);
         redListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("PlayerList", "Suck red dick");
                 Participant participant = redTeam.get(position);
-                Intent intent = new Intent(LiveGameActivity.this, LiveSummonerInfoActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(Constants.LIVE_SUMMONER_INFO_EXTRA, participant);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                goToLiveSummonerInfoActivity(participant);
             }
         });
     }
 
-    private void goToLiveSummonerInfoActivity(){
-
+    private void goToLiveSummonerInfoActivity(Participant participant){
+        Intent intent = new Intent(LiveGameActivity.this, LiveSummonerInfoActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.LIVE_SUMMONER_INFO_EXTRA, participant);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
+
+    /*
+        System callbacks + establishing service connection
+     */
 
     @Override
     protected void onStart(){

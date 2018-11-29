@@ -12,6 +12,9 @@
     <string name="please_contact_developers">Please contact the developers!</string>
     <string name="connection_failed">Connection failed</string>
     <string name="please_check_connection">Please check your internet connection</string>
+    <string name="not_in_game">You are currently not in game</string>
+    <string name="refresh_players_in_game">Refresh</string>
+    <string name="back">Back</string>
 
     <string name="champion_level_0">Never played the champion before</string>
     <string name="champion_level_1">Has played the champion a couple of times</string>

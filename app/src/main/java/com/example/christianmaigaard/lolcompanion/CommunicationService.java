@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Telephony;
 import android.util.Log;
@@ -31,10 +32,9 @@ import java.util.ArrayList;
 
 public class CommunicationService extends Service {
 
-    // TODO: når man logger ind, vil det være en god idé at gemme SummonerID da det bliver brugt til en del api kald
     private static String LOG = "CommunicationService";
 
-    private long summonerId;
+    private boolean handlerStarted = false;
 
     // Volley Source: https://developer.android.com/training/volley/simple#java
     RequestQueue queue;
@@ -46,6 +46,9 @@ public class CommunicationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         queue = Volley.newRequestQueue(getApplicationContext());
 
+        if(!handlerStarted){
+            handler.post(periodicUpdate);
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -61,6 +64,52 @@ public class CommunicationService extends Service {
     public IBinder onBind(Intent intent) {
         return binder;
     }
+
+    //region periodic updates
+    // Handler and periodic update inspired by: https://wangjingke.com/2016/09/23/Multiple-ways-to-schedule-repeated-tasks-in-android
+    Handler handler = new Handler();
+    private Runnable periodicUpdate = new Runnable() {
+        @Override
+        public void run() {
+            handlerStarted = true;
+            Log.d("ServiceResponse", "handler run");
+            checkIfInGame();
+            // Loops this method every 1 minutes
+            handler.postDelayed(periodicUpdate, 1000*60);
+
+        }
+    };
+
+    private void checkIfInGame(){
+        long summonerId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(this);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SPECTATOR_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                // If call is a success broadcast true
+                broadcastInGameStatus(true);
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error){
+                if(error.networkResponse.statusCode == 404){
+                    // if call is failure with code 404 no game is active
+                    broadcastInGameStatus(false);
+                }
+            }
+        }
+        );
+        queue.add(jsonObjectRequest);
+    }
+
+    private void broadcastInGameStatus(boolean isInGame){
+        Intent intent = new Intent(Constants.BROADCAST_IS_IN_GAME_ACTION);
+        intent.putExtra(Constants.IS_IN_GAME_EXTRA, isInGame);
+        sendBroadcast(intent);
+    }
+
+
+    //endregion
 
     //region summerInfo methods
     public void createSummonerInfoRequest(String summonerName){
@@ -159,8 +208,9 @@ public class CommunicationService extends Service {
     }
     //endregion
 
+    //region activeGameParticipantsRequests methods
     public void createActiveGameRequest(long summonerId){
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SPECTATOR_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -240,9 +290,9 @@ public class CommunicationService extends Service {
         });
         queue.add(request);
     }
+    //endregion
 
-
-
+    //region CurrentChampMasteryRequest methods
     public void createCurrentChampionMasteryRequest(long summonerId, final long championId){
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONArray>() {
@@ -309,5 +359,5 @@ public class CommunicationService extends Service {
 
         sendBroadcast(intent);
     }
-
+    //endregion
 }

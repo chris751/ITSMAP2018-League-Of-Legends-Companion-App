@@ -22,6 +22,7 @@ public final class Constants {
     public static final String BROADCAST_SUMMONER_INFO_ACTION = "SUMMONER_INFO";
     public static final String BROADCAST_GAME_PARTICIPANTS_ACTION = "GAME_PARTICIPANTS";
     public static final String BROADCAST_CURRENT_CHAMP_MASTERY_ACTION = "CURRENT_CHAMP_MASTERY_ACTION";
+    public static final String BROADCAST_IS_IN_GAME_ACTION = "BROADCAST_IS_IN_GAME_ACTION";
 
     // EXTRAS
     public static final String BEST_CHAMPION_EXTRA = "BEST_CHAMPION_EXTRA";
@@ -29,7 +30,7 @@ public final class Constants {
     public static final String GAME_PARTICIPANTS_EXTRA = "GAME_PARTICIPANTS_EXTRA";
     public static final String LIVE_SUMMONER_INFO_EXTRA = "LIVE_SUMMONER_INFO_EXTRA";
     public static final String CURRENT_CHAMP_MASTERY_EXTRA = "CURRENT_CHAMP_MASTERY_EXTRA";
-
+    public static final String IS_IN_GAME_EXTRA = "IS_IN_GAME_EXTRA";
 
     // Preferences
     public static final String SHARED_PREFERENCES = "UserPreferences";
