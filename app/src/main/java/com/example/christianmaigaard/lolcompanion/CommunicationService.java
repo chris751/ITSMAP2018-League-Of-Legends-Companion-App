@@ -32,6 +32,9 @@ public class CommunicationService extends Service {
     private static String LOG = "CommunicationService";
 
     private boolean handlerStarted = false;
+    private String API_KEY = "";
+
+    private long summonerId;
 
     // Volley Source: https://developer.android.com/training/volley/simple#java
     RequestQueue queue;
@@ -80,7 +83,7 @@ public class CommunicationService extends Service {
     private void checkIfInGame(){
         long summonerId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SPECTATOR_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONObject>() {
+                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SPECTATOR_END_POINT + summonerId +"?api_key="+API_KEY, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 // If call is a success broadcast true
@@ -111,7 +114,7 @@ public class CommunicationService extends Service {
     //region summornerInfo methods
     public void createSummonerInfoRequest(String summonerName){
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SUMMONER_INFO_END_POINT + summonerName + Constants.API_KEY, null, new Response.Listener<JSONObject>() {
+                (Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SUMMONER_INFO_END_POINT + summonerName +"?api_key="+API_KEY, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
@@ -151,7 +154,7 @@ public class CommunicationService extends Service {
     public void getBestChamp(){
         long summonerID = SharedPrefs.retrieveSummonorIdFromSharedPreferences(this);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + summonerID + Constants.API_KEY, null, new Response.Listener<JSONArray>() {
+                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + summonerID +"?api_key="+API_KEY, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
@@ -208,8 +211,8 @@ public class CommunicationService extends Service {
 
     //region activeGameParticipantsRequests methods
     public void createActiveGameRequest(long summonerId){
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SPECTATOR_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SPECTATOR_END_POINT + summonerId +"?api_key="+API_KEY, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 playersInGame.clear();
@@ -293,7 +296,7 @@ public class CommunicationService extends Service {
     //region CurrentChampMasteryRequest methods
     public void createCurrentChampionMasteryRequest(long summonerId, final long championId){
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + summonerId + Constants.API_KEY, null, new Response.Listener<JSONArray>() {
+                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_BEST_CHAMP_END_POINT + summonerId +"?api_key="+API_KEY, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
@@ -358,4 +361,41 @@ public class CommunicationService extends Service {
         sendBroadcast(intent);
     }
     //endregion
+    public void fetchRiotGamesApiKey() {
+        String url = "https://sheets.googleapis.com/v4/spreadsheets/11R2RtgPup8uc5N6ePR9KT8eNxKRSoOqVBRmS1H1WZOQ/values/A1?key=AIzaSyB11t2pRGIqX1oR75znhGYyoXYGcCxCJZE";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("requestResponse","Response: " + response.toString());
+                Intent intent = new Intent(Constants.BROADCAST_API_KEY);
+                try { ;
+                    JSONArray values = response.getJSONArray("values");
+                    Object apiKey = values.get(0);
+                    String api = apiKey.toString();
+                    api = api.substring(2, api.length()-2);
+                    intent.putExtra(Constants.API_KEY_EXTRA, api);
+                    Log.d(LOG, "API: " + api);
+                    API_KEY = api;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                sendBroadcast(intent);
+            }
+        }, new ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(LOG, "Google sheets error");
+                Log.d(LOG, error.toString());
+
+                // TODO: Handle error
+
+            }
+        });
+        queue.add(request);
+    }
+
+
 }

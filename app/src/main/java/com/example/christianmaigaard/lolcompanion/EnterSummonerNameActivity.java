@@ -25,12 +25,12 @@ import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_NAME;
 
 public class EnterSummonerNameActivity extends AppCompatActivity {
 
 
     private static final String LOG = "SummonorNameActivity";
-    public static final String SUMMONER_NAME = "summonerName";
 
     Button findSummonerName;
     EditText enterSummonerName;
@@ -41,6 +41,9 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
     private BroadcastReceiver mReceiver;
     private IntentFilter mFilter;
+
+    private String summonerName;
+    private String apiKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +64,15 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
         enterSummonerName = findViewById(R.id.enter_summoner_name_edit_text);
         spinner = findViewById(R.id.enter_summoner_name_progressbar);
         // Service
-        startService(new Intent(this, CommunicationService.class));
+        if (!mBound) {
+            startService(new Intent(this, CommunicationService.class));
+        }
         startBroadCastReceiver();
 
         mFilter = new IntentFilter();
         mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION_ACTION);
         mFilter.addAction(Constants.BROADCAST_SUMMONER_INFO_ACTION);
+        mFilter.addAction(Constants.BROADCAST_API_KEY);
         registerReceiver(mReceiver, mFilter);
     }
 
@@ -84,11 +90,22 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                spinner.setVisibility(View.INVISIBLE);
+
+
+                if (intent.getAction().equals(Constants.BROADCAST_API_KEY)) {
+                    apiKey = intent.getStringExtra(Constants.API_KEY_EXTRA);
+                    Log.d(LOG, "Received key" + apiKey);
+                    if (mBound && summonerNameStored()) {
+                        mService.createSummonerInfoRequest(SharedPrefs.retrieveSummonorNameFromSharedPreferences(EnterSummonerNameActivity.this));
+                    } else {
+                        spinner.setVisibility(View.INVISIBLE);
+                    }
+                }
 
                 if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
+                    spinner.setVisibility(View.INVISIBLE);
                     long summonerLevel = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
-                    String name = intent.getStringExtra(Constants.SUMMONER_NAME);
+                    String name = intent.getStringExtra(SUMMONER_NAME);
                     long id = intent.getLongExtra(Constants.SUMMONER_ID,0);
                     String error = intent.getStringExtra(Constants.ERROR);
                     if(error != null && !error.isEmpty()) {
@@ -138,12 +155,11 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
     private void findNameButtonClicked() {
         spinner.setVisibility(View.VISIBLE);
-        String summonerName = enterSummonerName.getText().toString();
+        summonerName = enterSummonerName.getText().toString();
         if(mBound){
             mService.createSummonerInfoRequest(summonerName);
         }
     }
-
 
     @Override
     protected void onStart(){
@@ -172,12 +188,9 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
             mService = binder.getService();
             mBound = true;
 
-            // if we already stored a summoner
-            if (summonerNameStored()){
-                //spinner.setVisibility(View.VISIBLE);
-                if(mBound){
-                    mService.createSummonerInfoRequest(SharedPrefs.retrieveSummonorNameFromSharedPreferences(EnterSummonerNameActivity.this));
-                }
+            if(apiKey == null) {
+                spinner.setVisibility(View.VISIBLE);
+                mService.fetchRiotGamesApiKey();
             }
         }
 
@@ -185,7 +198,6 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
         public void onServiceDisconnected(ComponentName arg0) {
             mBound = false;
         }
-
     };
 
 }

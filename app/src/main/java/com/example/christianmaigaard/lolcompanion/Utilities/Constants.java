@@ -2,7 +2,7 @@ package com.example.christianmaigaard.lolcompanion.Utilities;
 
 public final class Constants {
     // Api key: Has to be updated every 24 hours atm.
-    public static final String API_KEY = "?api_key="+ "RGAPI-2c370ee3-61dc-41b6-b850-5a2e16c70503";
+    //public static final String API_KEY = "?api_key="+ "RGAPI-2c370ee3-61dc-41b6-b850-5a2e16c70503";
 
     // end points and url for riot api
     // Building api call example: RIOT_API_BASE_URL + <END_POINT> + API_KEY
@@ -23,6 +23,7 @@ public final class Constants {
     public static final String BROADCAST_GAME_PARTICIPANTS_ACTION = "GAME_PARTICIPANTS";
     public static final String BROADCAST_CURRENT_CHAMP_MASTERY_ACTION = "CURRENT_CHAMP_MASTERY_ACTION";
     public static final String BROADCAST_IS_IN_GAME_ACTION = "BROADCAST_IS_IN_GAME_ACTION";
+    public static final String BROADCAST_API_KEY = "API_KEY";
 
     // EXTRAS
     public static final String BEST_CHAMPION_NAME_EXTRA = "BEST_CHAMPION_NAME_EXTRA";
@@ -32,6 +33,7 @@ public final class Constants {
     public static final String LIVE_SUMMONER_INFO_EXTRA = "LIVE_SUMMONER_INFO_EXTRA";
     public static final String CURRENT_CHAMP_MASTERY_EXTRA = "CURRENT_CHAMP_MASTERY_EXTRA";
     public static final String IS_IN_GAME_EXTRA = "IS_IN_GAME_EXTRA";
+    public static final String API_KEY_EXTRA = "API_KEY_EXTRA";
 
     // Preferences
     public static final String SHARED_PREFERENCES = "UserPreferences";

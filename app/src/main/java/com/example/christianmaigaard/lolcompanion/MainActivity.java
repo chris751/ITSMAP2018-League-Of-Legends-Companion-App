@@ -6,10 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,10 +20,12 @@ import com.example.christianmaigaard.lolcompanion.Utilities.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
-import static com.example.christianmaigaard.lolcompanion.EnterSummonerNameActivity.SUMMONER_NAME;
+import java.io.IOException;
+import java.io.InputStream;
+
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
-
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_NAME;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,10 +63,6 @@ public class MainActivity extends AppCompatActivity {
         // Save summoner name in sharedpreferences
         SharedPrefs.storeSummonerNameInSharedPreferences(this, summonerName);
         SharedPrefs.storeSummonerIdInSharedPreferences(this, summonerID);
-
-//        long summId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(this);
-        //      String summName = SharedPrefs.retrieveSummonorNameFromSharedPreferences(this);
-
 
         // Start services
         startService(new Intent(this, CommunicationService.class));
