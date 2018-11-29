@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SHARED_PREFERENCES;
-import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONOR_NAME;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_NAME;
 
 public class SharedPrefs {
 
@@ -16,13 +16,18 @@ public class SharedPrefs {
         SharedPreferences pref = c.getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
 
-        editor.putString(SUMMONOR_NAME, summonerName); // Storing string
+        editor.putString(SUMMONER_NAME, summonerName); // Storing string
         editor.commit(); // commit changes
     }
 
     public static String retrieveSummonorNameFromSharedPreferences(Context c) {
         SharedPreferences pref = c.getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, 0); // 0 - for private mode
-        String summonorName =pref.getString(SUMMONOR_NAME, null);
+        String summonorName = pref.getString(SUMMONER_NAME, null);
         return summonorName;
+    }
+
+    public static void deleteSummonerName(Context c) {
+        SharedPreferences preferences = c.getApplicationContext().getSharedPreferences(SHARED_PREFERENCES, 0);
+        preferences.edit().remove(SUMMONER_NAME).commit();
     }
 }

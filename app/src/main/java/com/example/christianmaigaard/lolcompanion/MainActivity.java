@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,8 @@ import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
 import static com.example.christianmaigaard.lolcompanion.EnterSummonerNameActivity.SUMMONER_NAME;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,14 +30,20 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String LOG = "MainActivity";
 
+    // UI
     private TextView name;
     private TextView profileIcon;
     private TextView level;
     private TextView bestChamp;
-    private Button getInfo;
-    private String summonerName;
     private ImageView champImage;
+    private Button changeName;
+    private Button getInfo;
     private Button liveGame;
+    // Variables
+    private String summonerName;
+    private long summonerLevel;
+
+
 
 
     private CommunicationService mService;
@@ -48,33 +57,50 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // Code inspired heavily from "intentClassExample"
-        Intent dataFromSummonerNameActivity = getIntent();
-        summonerName = dataFromSummonerNameActivity.getStringExtra(SUMMONER_NAME);
-
-        // save summonor name in sharedpreferences
-        SharedPrefs.storeSummonerNameInSharedPreferences(this, summonerName);
-        // retrieve summonor name in sharedpreferences
-        String newName = SharedPrefs.retrieveSummonorNameFromSharedPreferences(this);
-        Log.d(LOG, "got from prefs !!" + newName);
-
         name = findViewById(R.id.nameView);
         profileIcon = findViewById(R.id.profileIconView);
         level = findViewById(R.id.levelView);
         bestChamp = findViewById(R.id.bestChampView);
         getInfo = findViewById(R.id.getInfoButton);
+        changeName = findViewById(R.id.main_activity_change_name_button);
         champImage = findViewById(R.id.champIcon);
         liveGame = findViewById(R.id.goToLive);
 
+        // Code inspired heavily from "intentClassExample"
+        Intent dataFromSummonerNameActivity = getIntent();
+        summonerName = dataFromSummonerNameActivity.getStringExtra(SUMMONER_NAME);
+        summonerLevel = dataFromSummonerNameActivity.getLongExtra(SUMMONER_LEVEL,0);
+
+
+        // save summonor name in sharedpreferences
+        SharedPrefs.storeSummonerNameInSharedPreferences(this, summonerName);
+        // retrieve summonor name in sharedpreferences
+        final String newName = SharedPrefs.retrieveSummonorNameFromSharedPreferences(this);
+        Log.d(LOG, "got from prefs !!" + newName);
+
+        if(mBound){
+            mService.createSummonerInfoRequest(summonerName);
+            mService.getBestChamp();
+        }
+
+
+
         //Intent intent = new Intent()
         startService(new Intent(this, CommunicationService.class));
+
+
+        changeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPrefs.deleteSummonerName(MainActivity.this);
+                finish();
+            }
+        });
 
         getInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mBound){
-                    mService.createSummonerInfoRequest("Nikkelazz");
                     mService.getBestChamp();
                 }
             }
@@ -105,9 +131,17 @@ public class MainActivity extends AppCompatActivity {
         mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION_ACTION);
         mFilter.addAction(Constants.BROADCAST_SUMMONER_INFO_ACTION);
         registerReceiver(mReceiver, mFilter);
+        if(mBound){
+            mService.getBestChamp();
+        }
+
+        updateUI();
     }
 
-
+    private void updateUI() {
+        name.setText(summonerName);
+        level.setText(String.valueOf(summonerLevel));
+    }
 
 
     @Override
