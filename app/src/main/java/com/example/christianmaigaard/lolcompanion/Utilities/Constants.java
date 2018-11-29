@@ -17,8 +17,6 @@ public final class Constants {
     // Building url: COMMUNITY_DRAGON_CHAMPION_URL + <champkey/id> + .json
     public static final String COMMUNITY_DRAGON_CHAMPION_URL = "http://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/";
 
-
-
     //Broadcast actions
     public static final String BROADCAST_BEST_CHAMPION_ACTION = "BEST_CHAMPION";
     public static final String BROADCAST_SUMMONER_INFO_ACTION = "SUMMONER_INFO";
@@ -36,6 +34,11 @@ public final class Constants {
     public static final String SUMMONER_NAME = "SummonorName";
     public static final String SUMMONER_LEVEL = "SummonerLevel";
     public static final String ERROR = "Error";
+
+    // Volley erros
+    public static final String VOLLEY_AUTH_ERROR = "com.android.volley.AuthFailureError";
+    public static final String VOLLEY_CONNECTION_ERROR = "com.android.volley.NoConnectionError: java.net.UnknownHostException: Unable to resolve host \"euw1.api.riotgames.com\": No address associated with hostname";
+
 
 
 }

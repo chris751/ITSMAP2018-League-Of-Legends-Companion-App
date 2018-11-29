@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
-    
+
     private static final String LOG = "MainActivity";
 
     // UI

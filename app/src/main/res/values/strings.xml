@@ -5,4 +5,11 @@
     <string name="enter_summoner_name_activity_find_button">Find</string>
     <string name="summoner_level">Level</string>
     <string name="most_played_champion">Most played champion</string>
+    <string name="invalid_summoner_name">Invalid summoner name</string>
+    <string name="check_summoner_name_for_correctness">Please check if the summoner name is correct</string>
+    <string name="ok">OK</string>
+    <string name="invalid_api_key">Invalid API key</string>
+    <string name="please_contact_developers">Please contact the developers!</string>
+    <string name="connection_failed">Connection failed</string>
+    <string name="please_check_connection">Please check your internet connection</string>
 </resources>
