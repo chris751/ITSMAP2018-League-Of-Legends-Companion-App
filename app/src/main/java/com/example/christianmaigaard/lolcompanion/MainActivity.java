@@ -10,7 +10,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,9 +19,6 @@ import android.widget.Toast;
 import com.example.christianmaigaard.lolcompanion.Utilities.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import static com.example.christianmaigaard.lolcompanion.EnterSummonerNameActivity.SUMMONER_NAME;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
@@ -100,9 +96,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION_ACTION)){
-                    String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_EXTRA);
+                    String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_NAME_EXTRA);
+                    String bestChampAlias = intent.getStringExtra(Constants.BEST_CHAMPION_ALIAS_EXTRA);
                     bestChamp.setText(bestChampName);
-                    champImage.setImageDrawable(AssetHelper.loadChampImageFromAssets(MainActivity.this, bestChampName)); // TODO: Denne metode bør køres med Champion alias og ikke navn
+                    champImage.setImageDrawable(AssetHelper.loadChampImageFromAssets(MainActivity.this, bestChampAlias));
                 }
                 if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
                     long summonerLvl = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);

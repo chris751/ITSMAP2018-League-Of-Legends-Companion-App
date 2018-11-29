@@ -1,13 +1,11 @@
 package com.example.christianmaigaard.lolcompanion;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.Telephony;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -27,7 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CommunicationService extends Service {
@@ -111,7 +108,7 @@ public class CommunicationService extends Service {
 
     //endregion
 
-    //region summerInfo methods
+    //region summornerInfo methods
     public void createSummonerInfoRequest(String summonerName){
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_SUMMONER_INFO_END_POINT + summonerName + Constants.API_KEY, null, new Response.Listener<JSONObject>() {
@@ -187,7 +184,8 @@ public class CommunicationService extends Service {
                 Log.d("requestResponse","Response: " + response.toString());
                 Intent intent = new Intent(Constants.BROADCAST_BEST_CHAMPION_ACTION);
                 try {
-                    intent.putExtra(Constants.BEST_CHAMPION_EXTRA, response.getString("name"));
+                    intent.putExtra(Constants.BEST_CHAMPION_NAME_EXTRA, response.getString("name"));
+                    intent.putExtra(Constants.BEST_CHAMPION_ALIAS_EXTRA, response.getString("alias"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

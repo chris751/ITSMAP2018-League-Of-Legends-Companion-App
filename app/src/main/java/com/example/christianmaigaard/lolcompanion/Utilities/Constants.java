@@ -25,7 +25,8 @@ public final class Constants {
     public static final String BROADCAST_IS_IN_GAME_ACTION = "BROADCAST_IS_IN_GAME_ACTION";
 
     // EXTRAS
-    public static final String BEST_CHAMPION_EXTRA = "BEST_CHAMPION_EXTRA";
+    public static final String BEST_CHAMPION_NAME_EXTRA = "BEST_CHAMPION_NAME_EXTRA";
+    public static final String BEST_CHAMPION_ALIAS_EXTRA = "BEST_CHAMPION_ALIAS_EXTRA";
     public static final String SUMMONER_INFO_LEVEL_EXTRA = "SUMMONER_INFO_LEVEL_EXTRA";
     public static final String GAME_PARTICIPANTS_EXTRA = "GAME_PARTICIPANTS_EXTRA";
     public static final String LIVE_SUMMONER_INFO_EXTRA = "LIVE_SUMMONER_INFO_EXTRA";
