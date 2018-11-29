@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPrefs.storeSummonerIdInSharedPreferences(this, summonerID);
 
 //        long summId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(this);
-  //      String summName = SharedPrefs.retrieveSummonorNameFromSharedPreferences(this);
+        //      String summName = SharedPrefs.retrieveSummonorNameFromSharedPreferences(this);
 
 
         // Start services

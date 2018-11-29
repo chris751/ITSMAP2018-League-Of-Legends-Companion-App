@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Utilities.Dialog;
@@ -33,6 +34,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
     Button findSummonerName;
     EditText enterSummonerName;
+    ProgressBar spinner;
 
     private CommunicationService mService;
     private boolean mBound = false;
@@ -57,7 +59,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
         // EditText
         enterSummonerName = findViewById(R.id.enter_summoner_name_edit_text);
-
+        spinner = findViewById(R.id.enter_summoner_name_progressbar);
         // Service
         startService(new Intent(this, CommunicationService.class));
         startBroadCastReceiver();
@@ -82,6 +84,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                spinner.setVisibility(View.INVISIBLE);
 
                 if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
                     long summonerLevel = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
@@ -134,7 +137,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
     }
 
     private void findNameButtonClicked() {
-
+        spinner.setVisibility(View.VISIBLE);
         String summonerName = enterSummonerName.getText().toString();
         if(mBound){
             mService.createSummonerInfoRequest(summonerName);
@@ -171,6 +174,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
             // if we already stored a summoner
             if (summonerNameStored()){
+                //spinner.setVisibility(View.VISIBLE);
                 if(mBound){
                     mService.createSummonerInfoRequest(SharedPrefs.retrieveSummonorNameFromSharedPreferences(EnterSummonerNameActivity.this));
                 }

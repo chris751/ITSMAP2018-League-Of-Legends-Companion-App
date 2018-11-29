@@ -6,6 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".EnterSummonerNameActivity">
 
+    <ProgressBar
+        android:id="@+id/enter_summoner_name_progressbar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="125dp"
+        android:layout_height="108dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.842"
+        tools:visibility="invisible" />
+
     <EditText
         android:id="@+id/enter_summoner_name_edit_text"
         android:layout_width="wrap_content"
@@ -31,4 +51,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enter_summoner_name_edit_text" />
+
 </android.support.constraint.ConstraintLayout>
