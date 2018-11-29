@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Button getInfo;
     private String summonerName;
     private ImageView champImage;
+    private Button liveGame;
 
 
     private CommunicationService mService;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         bestChamp = findViewById(R.id.bestChampView);
         getInfo = findViewById(R.id.getInfoButton);
         champImage = findViewById(R.id.champIcon);
+        liveGame = findViewById(R.id.goToLive);
 
         //Intent intent = new Intent()
         startService(new Intent(this, CommunicationService.class));
@@ -72,23 +74,36 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(mBound){
+                    mService.createSummonerInfoRequest("Nikkelazz");
                     mService.getBestChamp();
                 }
+            }
+        });
+        liveGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LiveGameActivity.class);
+                startActivity(intent);
             }
         });
 
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION)){
+                if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION_ACTION)){
                     String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_EXTRA);
                     bestChamp.setText(bestChampName);
-                    champImage.setImageDrawable(loadImageFromAssets(bestChampName));
+                    champImage.setImageDrawable(loadChampImageFromAssets(bestChampName));
+                }
+                if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
+                    long summonerLvl = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
+                    level.setText(summonerLvl+"");
                 }
             }
         };
         mFilter = new IntentFilter();
-        mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION);
+        mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION_ACTION);
+        mFilter.addAction(Constants.BROADCAST_SUMMONER_INFO_ACTION);
         registerReceiver(mReceiver, mFilter);
     }
 
@@ -131,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     // Source: https://xjaphx.wordpress.com/2011/10/02/store-and-use-files-in-assets/
-    private Drawable loadImageFromAssets(String champName){
+    private Drawable loadChampImageFromAssets(String champName){
         // load image
         try {
             // get input stream
