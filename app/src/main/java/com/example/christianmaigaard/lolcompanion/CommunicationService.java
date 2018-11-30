@@ -16,6 +16,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.christianmaigaard.lolcompanion.Model.Match;
+import com.example.christianmaigaard.lolcompanion.Model.MatchWrapper;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
@@ -26,6 +28,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.regex.Matcher;
 
 public class CommunicationService extends Service {
 
@@ -395,6 +400,134 @@ public class CommunicationService extends Service {
             }
         });
         queue.add(request);
+    }
+
+
+    public void createMatchHistoryRequest(long accountId){
+        informedMatchHistory.clear();
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_MATCH_HISTORY_END_POINT + accountId+ "?api_key="+API_KEY, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.d("LISTEN JEG VIL SE", "første kald igennem");
+                    ArrayList<Match> matchList = new ArrayList<Match>();
+                    JSONArray jsonMatchList = response.getJSONArray("matches");
+                    for(int i = 0; i < 10; i++){
+                        JSONObject jsonMatch = (JSONObject) jsonMatchList.get(i);
+                        Match match = new Match(i, jsonMatch.getLong("gameId"), jsonMatch.getLong("champion"));
+                        matchList.add(match);
+                    }
+                    processMatchList(matchList);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("requestResponse", "Der skete en fejl");
+                Log.d("requestResponse", error.toString());
+
+                // TODO: Handle error
+
+            }
+        });
+        queue.add(request);
+    }
+
+    private void processMatchList(ArrayList<Match> matchList){
+        for(int i = 0; i < matchList.size(); i++){
+            Match match = matchList.get(i);
+            processSingleMatch(match, match.getGameId(), match.getChampionId());
+        }
+    }
+
+    private void processSingleMatch(final Match match, long gameId, final long championId){
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_MATCH_INFO_END_POINT + gameId + "?api_key="+API_KEY, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("LISTEN JEG VIL SE", "andet kald igennem");
+                try {
+                    int kills;
+                    int deaths;
+                    int assists;
+                    boolean win;
+                    JSONObject thisPlayer = null;
+                    JSONObject thisPlayerStats = null;
+                    JSONArray participantList = (JSONArray) response.getJSONArray("participants");
+                    for(int i = 0; i < participantList.length(); i++){
+                        JSONObject participant = participantList.getJSONObject(i);
+                        if(championId == participant.getInt("championId")){
+                            thisPlayer = participant;
+                        }
+                    }
+                    if(thisPlayer!=null){
+                        thisPlayerStats = (JSONObject) thisPlayer.getJSONObject("stats");
+                    }
+                    if(thisPlayerStats!=null){
+                        kills = thisPlayerStats.getInt("kills");
+                        deaths = thisPlayerStats.getInt("deaths");
+                        assists = thisPlayerStats.getInt("assists");
+                        win = thisPlayerStats.getBoolean("win");
+
+                        match.setWin(win);
+                        match.setDeaths(deaths);
+                        match.setKills(kills);
+                        match.setAssists(assists);
+
+                        createInformedMatchHistory(match);
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("requestResponse", "Der skete en fejl");
+                Log.d("requestResponse", error.toString());
+
+                // TODO: Handle error
+
+            }
+        });
+        queue.add(request);
+    }
+
+    private ArrayList<Match> informedMatchHistory = new ArrayList<Match>();
+
+    private void createInformedMatchHistory(Match match){
+        informedMatchHistory.add(match);
+
+        //source: https://stackoverflow.com/questions/16751540/sorting-an-object-arraylist-by-an-attribute-value-in-java
+        Collections.sort(informedMatchHistory, new Comparator<Match>() {
+            @Override
+            public int compare(Match o1, Match o2) {
+                if(o1.getOrder() > o2.getOrder()){
+                    return 1;
+                }
+                if(o1.getOrder() < o2.getOrder()){
+                    return -1;
+                }
+                return 0;
+            }
+        });
+        MatchWrapper matchWrapper = new MatchWrapper(informedMatchHistory);
+        Intent intent = new Intent(Constants.BROADCAST_MATCH_HISTORY_ACTION);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.MATCH_HISTORY_EXTRA, matchWrapper);
+        intent.putExtras(bundle);
+        sendBroadcast(intent);
+
     }
 
 

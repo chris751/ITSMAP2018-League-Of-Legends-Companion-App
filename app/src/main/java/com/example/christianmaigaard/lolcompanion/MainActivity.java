@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(mBound){
                     mService.getBestChamp();
+                    mService.createMatchHistoryRequest(23131974);
                 }
             }
         });

@@ -10,7 +10,10 @@ public final class Constants {
     public static final String RIOT_API_SUMMONER_INFO_END_POINT = "/lol/summoner/v3/summoners/by-name/";
     public static final String RIOT_API_BEST_CHAMP_END_POINT = "/lol/champion-mastery/v3/champion-masteries/by-summoner/";
     public static final String RIOT_API_SPECTATOR_END_POINT = "/lol/spectator/v3/active-games/by-summoner/";
-    //public static final String SUMMONER_ID = "20129544";
+    public static final String RIOT_API_MATCH_HISTORY_END_POINT = "/lol/match/v3/matchlists/by-account/";
+    public static final String RIOT_API_MATCH_INFO_END_POINT ="/lol/match/v3/matches/";
+//23131974?endIndex=30
+
 
 
     //Get champions end point
@@ -24,6 +27,7 @@ public final class Constants {
     public static final String BROADCAST_CURRENT_CHAMP_MASTERY_ACTION = "CURRENT_CHAMP_MASTERY_ACTION";
     public static final String BROADCAST_IS_IN_GAME_ACTION = "BROADCAST_IS_IN_GAME_ACTION";
     public static final String BROADCAST_API_KEY = "API_KEY";
+    public static final String BROADCAST_MATCH_HISTORY_ACTION = "BROADCAST_MATCH_HISTORY_ACTION";
 
     // EXTRAS
     public static final String BEST_CHAMPION_NAME_EXTRA = "BEST_CHAMPION_NAME_EXTRA";
@@ -34,6 +38,7 @@ public final class Constants {
     public static final String CURRENT_CHAMP_MASTERY_EXTRA = "CURRENT_CHAMP_MASTERY_EXTRA";
     public static final String IS_IN_GAME_EXTRA = "IS_IN_GAME_EXTRA";
     public static final String API_KEY_EXTRA = "API_KEY_EXTRA";
+    public static final String MATCH_HISTORY_EXTRA = "MATCH_HISTORY_EXTRA";
 
     // Preferences
     public static final String SHARED_PREFERENCES = "UserPreferences";
