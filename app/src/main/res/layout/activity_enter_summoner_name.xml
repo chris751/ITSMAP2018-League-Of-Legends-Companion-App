@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".EnterSummonerNameActivity">
 
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ProgressBar
         android:id="@+id/enter_summoner_name_progressbar"
         style="?android:attr/progressBarStyle"
