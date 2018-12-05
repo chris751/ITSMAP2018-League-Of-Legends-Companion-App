@@ -25,6 +25,7 @@ import com.example.christianmaigaard.lolcompanion.Utilities.Dialog;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.ACCOUNT_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_NAME;
@@ -127,6 +128,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
                     String name = intent.getStringExtra(SUMMONER_NAME);
                     long id = intent.getLongExtra(Constants.SUMMONER_ID,0);
                     long profileIconId = intent.getLongExtra(SUMMONER_PROFILE_ICON_ID,0);
+                    long accountId = intent.getLongExtra(ACCOUNT_ID, 0);
                     String error = intent.getStringExtra(Constants.ERROR);
                     if(error != null && !error.isEmpty()) {
                         switch (error) {
@@ -147,6 +149,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
                     i.putExtra(SUMMONER_ID, id);
                     i.putExtra(SUMMONER_LEVEL, summonerLevel);
                     i.putExtra(SUMMONER_PROFILE_ICON_ID, profileIconId);
+                    i.putExtra(ACCOUNT_ID, accountId);
                     startActivity(i);
                 }
             }

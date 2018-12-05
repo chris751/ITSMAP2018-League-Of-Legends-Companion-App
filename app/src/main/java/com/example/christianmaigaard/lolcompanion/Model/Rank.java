@@ -1,10 +1,13 @@
 package com.example.christianmaigaard.lolcompanion.Model;
 
-public class Rank {
+import java.io.Serializable;
+
+public class Rank implements Serializable {
 
     private int wins;
     private int losses;
     private String tier;
+
 
     public Rank(int wins, int losses, String tier){
         this.wins = wins;

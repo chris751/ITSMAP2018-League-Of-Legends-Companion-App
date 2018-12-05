@@ -134,11 +134,12 @@ public class CommunicationService extends Service {
                             long summonerLvl = response.getLong("summonerLevel");
                             long summonerId = response.getLong("id");
                             long profileIconId = response.getLong("profileIconId");
-                            //Log.d(LOG, summonerLvl+"");
+                            long accountId = response.getLong("accountId");
+                            intent.putExtra(Constants.SUMMONER_PROFILE_ICON_ID, profileIconId);
                             intent.putExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA, summonerLvl);
                             intent.putExtra(Constants.SUMMONER_NAME, name);
                             intent.putExtra(Constants.SUMMONER_ID, summonerId);
-                            intent.putExtra(Constants.SUMMONER_PROFILE_ICON_ID, profileIconId);
+                            intent.putExtra(Constants.ACCOUNT_ID, accountId);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -467,7 +468,7 @@ public class CommunicationService extends Service {
                         match.setKills(kills);
                         match.setAssists(assists);
 
-                        createInformedMatchHistory(match);
+                        getChampionAlias(match, championId);
                     }
 
 
@@ -491,6 +492,37 @@ public class CommunicationService extends Service {
     }
 
     private ArrayList<Match> informedMatchHistory = new ArrayList<Match>();
+
+    private void getChampionAlias(final Match match, long championId){
+        String url = Constants.COMMUNITY_DRAGON_CHAMPION_URL;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + championId + ".json", null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("requestResponse","Response: " + response.toString());
+                try {
+                    String alias = response.getString("alias");
+                    match.setChampionAlias(alias);
+                    createInformedMatchHistory(match);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("requestResponse", "Der skete en fejl");
+                Log.d("requestResponse", error.toString());
+
+                // TODO: Handle error
+
+            }
+        });
+        queue.add(request);
+    }
+
 
     private void createInformedMatchHistory(Match match){
         informedMatchHistory.add(match);
@@ -518,7 +550,8 @@ public class CommunicationService extends Service {
 
     //endregion
 
-    public void createChampionRankRequest(){
+    //region Ranked stats methods
+    public void createSummonerRankRequest(){
         long summonerId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(this);
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
@@ -534,8 +567,7 @@ public class CommunicationService extends Service {
                             String tier = queueType.getString("tier");
 
                             Rank rank = new Rank(wins, losses, tier);
-
-
+                            broadcastRank(rank);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -555,7 +587,11 @@ public class CommunicationService extends Service {
     }
 
     private void broadcastRank(Rank rank){
-        //Intent intent = new
+        Intent intent = new Intent(Constants.BROADCAST_RANK_ACTION);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.RANK_EXTRA,rank);
+        intent.putExtras(bundle);
+        sendBroadcast(intent);
     }
-
+    //endregion
 }

@@ -2,6 +2,7 @@ package com.example.christianmaigaard.lolcompanion.Adapter;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,9 @@ public class MatchHistoryListAdapter extends BaseAdapter {
             TextView isWin = (TextView) convertView.findViewById(R.id.isWin);
             TextView kda = (TextView) convertView.findViewById(R.id.kda);
 
-            champIcon.setImageDrawable(AssetHelper.loadChampImageFromAssets(context, "shaco"));
+            Log.d("championAlias",match.getChampionAlias());
+
+            champIcon.setImageDrawable(AssetHelper.loadChampImageFromAssets(context, match.getChampionAlias()));
 
             String isWinText;
             if(match.getWin()){
