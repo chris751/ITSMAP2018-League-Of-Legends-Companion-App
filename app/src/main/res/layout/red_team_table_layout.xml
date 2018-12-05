@@ -30,4 +30,5 @@
         android:layout_below="@+id/champName"
         android:layout_toLeftOf="@+id/champIcon"
         />
+
 </RelativeLayout>

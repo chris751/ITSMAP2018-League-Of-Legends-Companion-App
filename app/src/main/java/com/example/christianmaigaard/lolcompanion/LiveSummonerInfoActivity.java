@@ -32,6 +32,7 @@ public class LiveSummonerInfoActivity extends AppCompatActivity {
     TextView championName;
     TextView masteryInfo;
     ProgressBar summonerSkillBarometer;
+    ProgressBar summonerInfoSpinner;
 
     private CommunicationService mService;
     private boolean mBound = false;
@@ -54,6 +55,7 @@ public class LiveSummonerInfoActivity extends AppCompatActivity {
             }
         });
 
+        summonerInfoSpinner.setVisibility(View.VISIBLE);
         Intent intent = getIntent();
         participant = (Participant) intent.getExtras().get(Constants.LIVE_SUMMONER_INFO_EXTRA);
 
@@ -65,6 +67,7 @@ public class LiveSummonerInfoActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent.getAction().equals(Constants.BROADCAST_CURRENT_CHAMP_MASTERY_ACTION)) {
+                    summonerInfoSpinner.setVisibility(View.INVISIBLE);
                     int championPoints = intent.getIntExtra(CHAMPMION_POINTS, 0);
                     MasteryLevel masteryLevel = determineMasterylevel(championPoints);
                     masteryInfo.setText(masteryLevel.getSummonerSkillLevel());
@@ -127,6 +130,7 @@ public class LiveSummonerInfoActivity extends AppCompatActivity {
         championName = findViewById(R.id.champNameView);
         masteryInfo = findViewById(R.id.masteryInfoView);
         summonerSkillBarometer = findViewById(R.id.summonerSkillBarometer);
+        summonerInfoSpinner = findViewById(R.id.summonerInfoSpinner);
         summonerSkillBarometer.setScaleY(5f);
     }
 
