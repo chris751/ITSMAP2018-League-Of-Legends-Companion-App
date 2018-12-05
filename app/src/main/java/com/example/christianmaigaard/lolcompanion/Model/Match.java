@@ -15,6 +15,9 @@ public class Match implements Serializable {
     private int deaths;
     private int assists;
 
+    // third iteration
+    private String championAlias;
+
 
     public Match(int order, long gameId, long championId){
         this.order = order;
@@ -64,5 +67,13 @@ public class Match implements Serializable {
 
     public void setAssists(int assists) {
         this.assists = assists;
+    }
+
+    public String getChampionAlias() {
+        return championAlias;
+    }
+
+    public void setChampionAlias(String championAlias) {
+        this.championAlias = championAlias;
     }
 }

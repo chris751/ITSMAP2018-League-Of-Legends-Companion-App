@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.ACCOUNT_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_NAME;
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private String summonerName;
     private long summonerLevel;
     private long summonerID;
+    private long accountID;
     private boolean mIsInGame = false;
     // Services
     private CommunicationService mService;
@@ -85,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         summonerName = extras.getString(SUMMONER_NAME);
         summonerLevel = extras.getLong(SUMMONER_LEVEL,0);
         summonerID = extras.getLong(SUMMONER_ID,0);
+        accountID = extras.getLong(ACCOUNT_ID,0);
     }
 
     private void setupList(ArrayList<Match> matchList){
@@ -123,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
                     ArrayList<Match> matchList = wrapper.getMatchList();
                     setupList(matchList);
                 }
+                if(intent.getAction().equals(Constants.BROADCAST_RANK_ACTION)){
+                    // TODO: gør noget med rank stats, der er TIER, wins og losses
+                }
             }
         };
     }
@@ -150,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(mBound){
                     mService.getBestChamp();
-                    mService.createMatchHistoryRequest(23131974);
                 }
             }
         });
@@ -186,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
     // Calls all relevant services to gather information about current summoner
     private void callServices() {
         mService.getBestChamp();
+        mService.createMatchHistoryRequest(accountID);
     }
 
     private void updateUI() {

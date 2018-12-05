@@ -28,6 +28,7 @@ public final class Constants {
     public static final String BROADCAST_IS_IN_GAME_ACTION = "BROADCAST_IS_IN_GAME_ACTION";
     public static final String BROADCAST_API_KEY = "API_KEY";
     public static final String BROADCAST_MATCH_HISTORY_ACTION = "BROADCAST_MATCH_HISTORY_ACTION";
+    public static final String BROADCAST_RANK_ACTION = "BROADCAST_RANK_ACTION";
 
     // EXTRAS
     public static final String BEST_CHAMPION_NAME_EXTRA = "BEST_CHAMPION_NAME_EXTRA";
@@ -39,6 +40,7 @@ public final class Constants {
     public static final String IS_IN_GAME_EXTRA = "IS_IN_GAME_EXTRA";
     public static final String API_KEY_EXTRA = "API_KEY_EXTRA";
     public static final String MATCH_HISTORY_EXTRA = "MATCH_HISTORY_EXTRA";
+    public static final String RANK_EXTRA = "RANK_EXTRA";
 
     // Preferences
     public static final String SHARED_PREFERENCES = "UserPreferences";
@@ -48,6 +50,7 @@ public final class Constants {
     public static final String SUMMONER_LEVEL = "SummonerLevel";
     public static final String SUMMONER_ID = "SummonerID";
     public static final String ERROR = "Error";
+    public static final String ACCOUNT_ID = "AccountID";
 
     // Volley erros
     public static final String VOLLEY_AUTH_ERROR = "com.android.volley.AuthFailureError";
