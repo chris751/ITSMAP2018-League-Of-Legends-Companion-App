@@ -1,13 +1,16 @@
 package com.example.christianmaigaard.lolcompanion.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.speech.tts.TextToSpeech;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.christianmaigaard.lolcompanion.Model.Match;
@@ -62,20 +65,23 @@ public class MatchHistoryListAdapter extends BaseAdapter {
         if(match!=null){
 
             ImageView champIcon = (ImageView) convertView.findViewById(R.id.champIcon);
-            TextView isWin = (TextView) convertView.findViewById(R.id.isWin);
+            TextView matchResult = (TextView) convertView.findViewById(R.id.isWin);
             TextView kda = (TextView) convertView.findViewById(R.id.kda);
+            ConstraintLayout layout = (ConstraintLayout) convertView.findViewById(R.id.colorBackgroundConstraintLayout);
 
             Log.d("championAlias",match.getChampionAlias());
 
             champIcon.setImageDrawable(AssetHelper.loadChampImageFromAssets(context, match.getChampionAlias()));
 
-            String isWinText;
+            String matchResultText;
             if(match.getWin()){
-                isWinText = context.getString(R.string.victory);
+                matchResultText = context.getString(R.string.victory);
+                layout.setBackgroundColor(Color.parseColor("#00c853"));
             } else {
-                isWinText = context.getString(R.string.defeat);
+                matchResultText = context.getString(R.string.defeat);
+                layout.setBackgroundColor(Color.parseColor("#d50000"));
             }
-            isWin.setText(isWinText);
+            matchResult.setText(matchResultText);
 
             int kills = match.getKills();
             int deaths = match.getDeaths();

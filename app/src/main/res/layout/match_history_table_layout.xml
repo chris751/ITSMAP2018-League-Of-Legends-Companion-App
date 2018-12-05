@@ -2,10 +2,19 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
+    android:id="@+id/match_history_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:layout_editor_absoluteY="25dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/colorBackgroundConstraintLayout"
+        android:layout_width="15dp"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toEndOf="@+id/champIcon"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </android.support.constraint.ConstraintLayout>
 
     <ImageView
         android:id="@+id/champIcon"
@@ -19,11 +28,11 @@
         android:id="@+id/isWin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        app:layout_constraintStart_toEndOf="@+id/champIcon"
+        app:layout_constraintStart_toEndOf="@+id/colorBackgroundConstraintLayout"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
