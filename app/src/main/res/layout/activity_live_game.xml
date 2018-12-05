@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
     tools:context=".LiveGameActivity">
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,7 +15,7 @@
         <ListView
             android:id="@+id/blueTeamList"
             android:layout_width="203dp"
-            android:layout_height="396dp"
+            android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="16dp" />
@@ -21,31 +23,42 @@
         <ListView
             android:id="@+id/redTeamList"
             android:layout_width="203dp"
-            android:layout_height="396dp"
-            android:layout_alignBottom="@+id/getPlayers"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="-3dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="47dp"
             android:layout_toRightOf="@id/blueTeamList" />
 
-        <Button
-            android:id="@+id/getPlayers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/blueTeamList"
-            android:layout_toRightOf="@+id/backBtn"
-            android:text="@string/refresh_players_in_game" />
+
+    </RelativeLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <Button
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/blueTeamList"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="0dp"
-            android:text="@string/back" />
-    </RelativeLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="@string/back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/getPlayers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/refresh_players_in_game"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+
 
 
 </RelativeLayout>

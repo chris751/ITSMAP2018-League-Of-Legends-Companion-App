@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
+
     <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
         android:id="@+id/champIcon"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:src="@mipmap/ic_launcher"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:src="@mipmap/ic_launcher" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Large Text"
         android:id="@+id/champName"
+        android:layout_marginTop="10dp"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@id/champIcon"
         />
@@ -23,6 +26,7 @@
         android:layout_height="wrap_content"
         android:text="Medium Text"
         android:id="@+id/summonerName"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/champName"
         android:layout_toLeftOf="@+id/champIcon"
         />
