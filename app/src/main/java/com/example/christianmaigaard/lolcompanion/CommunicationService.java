@@ -32,6 +32,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.regex.Matcher;
 
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.CHAMPMION_POINTS;
+
 public class CommunicationService extends Service {
 
     private static String LOG = "CommunicationService";
@@ -326,42 +328,24 @@ public class CommunicationService extends Service {
         for(int i = 0; i < champArray.length(); i++){
             JSONObject champion = (JSONObject) champArray.get(i);
             long fromArrayId = champion.getLong("championId");
-            if(fromArrayId == championId){
+            if(fromArrayId == championId) {
                 Log.d("yoyoyo", "fundet en champ stedet");
                 processCurrentChampInfo(champion);
                 return;
+            } else { // champion is not in the players pool, and thus must be 0
+                Intent intent = new Intent(Constants.BROADCAST_CURRENT_CHAMP_MASTERY_ACTION);
+                intent.putExtra(CHAMPMION_POINTS, 0); // therefore we simply broadcast 0
+                sendBroadcast(intent);
             }
         }
     }
 
     private void processCurrentChampInfo(JSONObject champion) throws JSONException {
         int championPoints = champion.getInt("championPoints");
-        String summonerSkillInfo = "";
-
-        if(championPoints == Constants.CHAMPION_LEVEL_0){
-            summonerSkillInfo = getString(R.string.champion_level_0);
-        } else if(Constants.CHAMPION_LEVEL_0 < championPoints && championPoints < Constants.CHAMPION_LEVEL_1){
-            summonerSkillInfo = getString(R.string.champion_level_1);
-        } else if(Constants.CHAMPION_LEVEL_1 < championPoints && championPoints < Constants.CHAMPION_LEVEL_2){
-            summonerSkillInfo = getString(R.string.champion_level_2);
-        } else if(Constants.CHAMPION_LEVEL_2 < championPoints && championPoints < Constants.CHAMPION_LEVEL_3){
-            summonerSkillInfo = getString(R.string.champion_level_3);
-        } else if(Constants.CHAMPION_LEVEL_3 < championPoints && championPoints < Constants.CHAMPION_LEVEL_4){
-            summonerSkillInfo = getString(R.string.champion_level_4);
-        } else if(Constants.CHAMPION_LEVEL_4 < championPoints && championPoints < Constants.CHAMPION_LEVEL_5){
-            summonerSkillInfo = getString(R.string.champion_level_5);
-        } else if(Constants.CHAMPION_LEVEL_5 < championPoints && championPoints < Constants.CHAMPION_LEVEL_6){
-            summonerSkillInfo = getString(R.string.champion_level_6);
-        } else if(Constants.CHAMPION_LEVEL_6 < championPoints && championPoints < Constants.CHAMPION_LEVEL_7){
-            summonerSkillInfo = getString(R.string.champion_level_7);
-        } else if(Constants.CHAMPION_LEVEL_7 < championPoints && championPoints < Constants.CHAMPION_LEVEL_CRAZY){
-            summonerSkillInfo = getString(R.string.champion_level_8);
-        }
 
         Intent intent = new Intent(Constants.BROADCAST_CURRENT_CHAMP_MASTERY_ACTION);
-        intent.putExtra(Constants.CURRENT_CHAMP_MASTERY_EXTRA, summonerSkillInfo);
-
-        Log.d("yoyoyo", "sender broadcast stedet");
+        intent.putExtra(CHAMPMION_POINTS, championPoints);
+        Log.d(LOG, "sender broadcast stedet");
 
         sendBroadcast(intent);
     }
@@ -429,8 +413,8 @@ public class CommunicationService extends Service {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("requestResponse", "Der skete en fejl");
-                Log.d("requestResponse", error.toString());
+                Log.d(LOG, "Der skete en fejl");
+                Log.d(LOG, error.toString());
 
                 // TODO: Handle error
 
@@ -451,7 +435,7 @@ public class CommunicationService extends Service {
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("LISTEN JEG VIL SE", "andet kald igennem");
+                Log.d(LOG, "andet kald igennem");
                 try {
                     int kills;
                     int deaths;
@@ -493,8 +477,8 @@ public class CommunicationService extends Service {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("requestResponse", "Der skete en fejl");
-                Log.d("requestResponse", error.toString());
+                Log.d(LOG, "Der skete en fejl");
+                Log.d(LOG, error.toString());
 
                 // TODO: Handle error
 

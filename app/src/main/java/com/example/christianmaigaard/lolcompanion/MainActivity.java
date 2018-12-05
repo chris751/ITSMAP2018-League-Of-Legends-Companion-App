@@ -10,19 +10,28 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.christianmaigaard.lolcompanion.Model.Match;
+import com.example.christianmaigaard.lolcompanion.Model.MatchWrapper;
+import com.example.christianmaigaard.lolcompanion.Model.Participant;
+import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
 import com.example.christianmaigaard.lolcompanion.Utilities.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
+import com.example.christianmaigaard.lolcompanion.Utilities.Dialog;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.BROADCAST_MATCH_HISTORY_ACTION;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.MATCH_HISTORY_EXTRA;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_NAME;
@@ -44,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private String summonerName;
     private long summonerLevel;
     private long summonerID;
-    private boolean mIsInGame = false;
+    private boolean mIsInGame = true;
     // Services
     private CommunicationService mService;
     private boolean mBound = false;
@@ -86,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION_ACTION);
         mFilter.addAction(Constants.BROADCAST_SUMMONER_INFO_ACTION);
         mFilter.addAction(Constants.BROADCAST_IS_IN_GAME_ACTION);
+        mFilter.addAction((BROADCAST_MATCH_HISTORY_ACTION));
         registerReceiver(mReceiver, mFilter);
     }
 
@@ -93,6 +103,15 @@ public class MainActivity extends AppCompatActivity {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(BROADCAST_MATCH_HISTORY_ACTION)){
+                    //MatchWrapper matches = intent.getSerializableExtra(MATCH_HISTORY_EXTRA);
+
+                    MatchWrapper matchWrapper = (MatchWrapper) intent.getExtras().get(BROADCAST_MATCH_HISTORY_ACTION);
+                    ArrayList<Match> matches = matchWrapper.getPlayerList();
+                    Log.d(LOG, String.valueOf(matches.get(0)));
+                    //setupList(playerList);
+                }
+
                 if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION_ACTION)){
                     String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_NAME_EXTRA);
                     String bestChampAlias = intent.getStringExtra(Constants.BEST_CHAMPION_ALIAS_EXTRA);
@@ -132,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(mBound){
-                    mService.getBestChamp();
+                    //mService.getBestChamp();
                     mService.createMatchHistoryRequest(23131974);
                 }
             }
@@ -143,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 if(mIsInGame){
                     goToLiveGameActivity();
                 } else{
-                    Toast.makeText(MainActivity.this, R.string.not_in_game, Toast.LENGTH_SHORT).show();
+                    Dialog.showAlertDialog(MainActivity.this, getString(R.string.not_in_game_title), getString(R.string.not_in_game));
                 }
             }
         });
@@ -198,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(mReceiver);
     }
 
-    private ServiceConnection connection = new ServiceConnection(){
+    private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             CommunicationService.LocalBinder binder = (CommunicationService.LocalBinder) service;

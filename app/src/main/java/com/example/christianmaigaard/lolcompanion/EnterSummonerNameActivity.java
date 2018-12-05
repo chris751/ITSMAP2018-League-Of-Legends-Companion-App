@@ -148,7 +148,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
     private void showFailedConnectionDialog() {
         Context c = EnterSummonerNameActivity.this;
-        String title = getString(R.string.connection_failed);
+        String title =  getString(R.string.connection_failed);
         String message = getString(R.string.please_check_connection);
         Dialog.showAlertDialog(c, title, message);
     }

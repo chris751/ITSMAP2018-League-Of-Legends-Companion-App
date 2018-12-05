@@ -42,6 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/blueTeamList"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="0dp"
             android:text="@string/back" />
     </RelativeLayout>
 

@@ -39,6 +39,7 @@ public final class Constants {
     public static final String IS_IN_GAME_EXTRA = "IS_IN_GAME_EXTRA";
     public static final String API_KEY_EXTRA = "API_KEY_EXTRA";
     public static final String MATCH_HISTORY_EXTRA = "MATCH_HISTORY_EXTRA";
+    public static final String CHAMPMION_POINTS = "championPoints";
 
     // Preferences
     public static final String SHARED_PREFERENCES = "UserPreferences";

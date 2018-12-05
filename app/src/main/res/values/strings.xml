@@ -26,5 +26,12 @@
     <string name="champion_level_7">Summoners main champ or one of them, knows the ins and outs of the mechanics</string>
     <string name="champion_level_8">Be very careful, one trick potential, watch any sudden movements, do not get baited</string>
     <string name="champion_level_9">Most likely a god. Definitely a One Trick. FF15</string>
+    <string name="not_in_game_title">Not in game</string>
+    <string name="champion_skill_barometer">Champion Skill Barometer</string>
+    <string name="novice">Novice</string>
+    <string name="noob">Noob</string>
+    <string name="intermediate">Intermediate</string>
+    <string name="one_trick">One trick</string>
+    <string name="verdict">Verdict</string>
 
 </resources>
