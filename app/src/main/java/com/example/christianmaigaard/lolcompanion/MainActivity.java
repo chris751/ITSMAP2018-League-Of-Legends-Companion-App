@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.example.christianmaigaard.lolcompanion.Model.Match;
 import com.example.christianmaigaard.lolcompanion.Model.MatchWrapper;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
 import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
+import com.example.christianmaigaard.lolcompanion.Adapter.MatchHistoryListAdapter;
 import com.example.christianmaigaard.lolcompanion.Utilities.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Utilities.Dialog;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private Button changeName;
     private Button getInfo;
     private Button liveGame;
+    private ListView matchHistoryView;
     // Variables
     private String summonerName;
     private long summonerLevel;
@@ -90,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
         summonerID = extras.getLong(SUMMONER_ID,0);
     }
 
+    private void setupList(ArrayList<Match> matchList){
+        MatchHistoryListAdapter matchHistoryListAdapter = new MatchHistoryListAdapter(this, matchList);
+        matchHistoryView.setAdapter(matchHistoryListAdapter);
+    }
+
     private void registerIntentFilter() {
         mFilter = new IntentFilter();
         mFilter.addAction(Constants.BROADCAST_BEST_CHAMPION_ACTION);
@@ -124,6 +132,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if(intent.getAction().equals(Constants.BROADCAST_IS_IN_GAME_ACTION)){
                     processInGameStatus(intent.getBooleanExtra(Constants.IS_IN_GAME_EXTRA,false));
+                }
+                if(intent.getAction().equals(Constants.BROADCAST_MATCH_HISTORY_ACTION)){
+                    MatchWrapper wrapper = (MatchWrapper) intent.getSerializableExtra(Constants.MATCH_HISTORY_EXTRA);
+                    ArrayList<Match> matchList = wrapper.getMatchList();
+                    setupList(matchList);
                 }
             }
         };
@@ -182,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
         changeName = findViewById(R.id.main_activity_change_name_button);
         champImage = findViewById(R.id.champIcon);
         liveGame = findViewById(R.id.goToLive);
+        matchHistoryView = findViewById(R.id.matchHistory);
     }
 
     // Calls all relevant services to gather information about current summoner

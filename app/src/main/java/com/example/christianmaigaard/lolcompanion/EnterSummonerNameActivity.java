@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.VideoView;
 
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Utilities.Dialog;
@@ -35,6 +37,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
     Button findSummonerName;
     EditText enterSummonerName;
     ProgressBar spinner;
+    VideoView video;
 
     private CommunicationService mService;
     private boolean mBound = false;
@@ -74,6 +77,22 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
         mFilter.addAction(Constants.BROADCAST_SUMMONER_INFO_ACTION);
         mFilter.addAction(Constants.BROADCAST_API_KEY);
         registerReceiver(mReceiver, mFilter);
+
+        // setup video
+        video = findViewById(R.id.videoView);
+        startVideo();
+    }
+
+    private void startVideo(){
+        String path = "android.resource://" + getPackageName() + "/" + R.raw.splash;
+        video.setVideoPath(path);
+        video.start();
+        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
     }
 
     private boolean summonerNameStored() {
@@ -163,6 +182,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
     @Override
     protected void onStart(){
+        startVideo();
         super.onStart();
         Intent intent = new Intent(this, CommunicationService.class);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);

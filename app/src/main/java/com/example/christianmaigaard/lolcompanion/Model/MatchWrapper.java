@@ -10,7 +10,7 @@ public class MatchWrapper implements Serializable {
         this.matchList = matchList;
     }
 
-    public ArrayList<Match> getPlayerList(){
+    public ArrayList<Match> getMatchList(){
         return matchList;
     }
 
