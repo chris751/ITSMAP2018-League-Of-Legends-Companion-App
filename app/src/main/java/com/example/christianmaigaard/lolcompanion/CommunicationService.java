@@ -19,6 +19,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.christianmaigaard.lolcompanion.Model.Match;
 import com.example.christianmaigaard.lolcompanion.Model.MatchWrapper;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
+import com.example.christianmaigaard.lolcompanion.Model.Rank;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
 import com.example.christianmaigaard.lolcompanion.Utilities.SharedPrefs;
@@ -402,7 +403,7 @@ public class CommunicationService extends Service {
         queue.add(request);
     }
 
-
+    //region Match History Methods
     public void createMatchHistoryRequest(long accountId){
         informedMatchHistory.clear();
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_MATCH_HISTORY_END_POINT + accountId+ "?api_key="+API_KEY, null, new Response.Listener<JSONObject>() {
@@ -527,8 +528,48 @@ public class CommunicationService extends Service {
         bundle.putSerializable(Constants.MATCH_HISTORY_EXTRA, matchWrapper);
         intent.putExtras(bundle);
         sendBroadcast(intent);
-
     }
 
+    //endregion
+
+    public void createChampionRankRequest(){
+        long summonerId = SharedPrefs.retrieveSummonorIdFromSharedPreferences(this);
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET, Constants.RIOT_API_BASE_URL + Constants.RIOT_API_RANK_END_POINT + summonerId +"?api_key="+API_KEY, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        JSONObject queueType = (JSONObject) response.get(i);
+                        if(queueType.getString("queueType").equals("RANKED_SOLO_5x5")){
+                            int wins = queueType.getInt("wins");
+                            int losses = queueType.getInt("losses");
+                            String tier = queueType.getString("tier");
+
+                            Rank rank = new Rank(wins, losses, tier);
+
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error){
+                        Log.d(LOG, error.toString());
+                    }
+                }
+        );
+        queue.add(jsonArrayRequest);
+    }
+
+    private void broadcastRank(Rank rank){
+        //Intent intent = new
+    }
 
 }
