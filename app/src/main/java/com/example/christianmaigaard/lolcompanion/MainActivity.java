@@ -23,6 +23,7 @@ import com.example.christianmaigaard.lolcompanion.Model.MatchWrapper;
 import com.example.christianmaigaard.lolcompanion.Model.Participant;
 import com.example.christianmaigaard.lolcompanion.Model.ParticipantsWrapper;
 import com.example.christianmaigaard.lolcompanion.Adapter.MatchHistoryListAdapter;
+import com.example.christianmaigaard.lolcompanion.Model.Rank;
 import com.example.christianmaigaard.lolcompanion.Utilities.AssetHelper;
 import com.example.christianmaigaard.lolcompanion.Utilities.Constants;
 import com.example.christianmaigaard.lolcompanion.Utilities.Dialog;
@@ -33,6 +34,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.BROADCAST_MATCH_HISTORY_ACTION;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.BROADCAST_RANK_ACTION;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.MATCH_HISTORY_EXTRA;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.ACCOUNT_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private Button getInfo;
     private Button liveGame;
     private ListView matchHistoryView;
+    private ImageView rankedTier;
+    private TextView winLossView;
     // Variables
     private String summonerName;
     private long summonerLevel;
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         mFilter.addAction(Constants.BROADCAST_SUMMONER_INFO_ACTION);
         mFilter.addAction(Constants.BROADCAST_IS_IN_GAME_ACTION);
         mFilter.addAction((BROADCAST_MATCH_HISTORY_ACTION));
+        mFilter.addAction(BROADCAST_RANK_ACTION);
         registerReceiver(mReceiver, mFilter);
     }
 
@@ -138,7 +143,11 @@ public class MainActivity extends AppCompatActivity {
                     setupList(matchList);
                 }
                 if(intent.getAction().equals(Constants.BROADCAST_RANK_ACTION)){
-                    // TODO: gør noget med rank stats, der er TIER, wins og losses
+                    Log.d("rankModtager", "jeg modtager stuff");
+                    Rank rank = (Rank) intent.getSerializableExtra(Constants.RANK_EXTRA);
+                    Drawable tier = AssetHelper.loadRankTierImageFromAssets(MainActivity.this,rank.getTier());
+                    rankedTier.setImageDrawable(tier);
+                    winLossView.setText("W"+rank.getWins() +" / L"+rank.getLosses());
                 }
             }
         };
@@ -197,12 +206,15 @@ public class MainActivity extends AppCompatActivity {
         liveGame = findViewById(R.id.goToLive);
         matchHistoryView = findViewById(R.id.matchHistory);
         summonerProfileImage = findViewById(R.id.summonerProfileImage);
+        rankedTier = findViewById(R.id.rankTierIconView);
+        winLossView = findViewById(R.id.winLossView);
     }
 
     // Calls all relevant services to gather information about current summoner
     private void callServices() {
         mService.getBestChamp();
         mService.createMatchHistoryRequest(accountID);
+        mService.createSummonerRankRequest();
     }
 
     private void updateUI() {

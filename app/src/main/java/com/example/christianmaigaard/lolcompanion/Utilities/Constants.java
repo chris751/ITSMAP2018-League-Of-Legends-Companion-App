@@ -12,7 +12,7 @@ public final class Constants {
     public static final String RIOT_API_SPECTATOR_END_POINT = "/lol/spectator/v3/active-games/by-summoner/";
     public static final String RIOT_API_MATCH_HISTORY_END_POINT = "/lol/match/v3/matchlists/by-account/";
     public static final String RIOT_API_MATCH_INFO_END_POINT = "/lol/match/v3/matches/";
-    public static final String RIOT_API_RANK_END_POINT = "lol/league/v3/positions/by-summoner/";
+    public static final String RIOT_API_RANK_END_POINT = "/lol/league/v3/positions/by-summoner/";
 
 
 
@@ -69,5 +69,15 @@ public final class Constants {
     public static final int CHAMPION_LEVEL_7 = 100000;
     public static final int CHAMPION_LEVEL_CRAZY = 1000000;
 
-    //
+    // Summoner ranks
+    public static final String RANK_IRON = "IRON";
+    public static final String RANK_BRONZE = "BRONZE";
+    public static final String RANK_SILVER = "SILVER";
+    public static final String RANK_GOLD = "GOLD";
+    public static final String RANK_PLATINUM = "PLATINUM";
+    public static final String RANK_DIAMOND = "DIAMOND";
+    public static final String RANK_MASTER = "MASTER";
+    public static final String RANK_GRANDMASTER = "GRANDMASTER";
+    public static final String RANK_CHALLENGER = "CHALLENGER";
+    public static final String RANK_UNRANKED = "UNRANKED";
 }

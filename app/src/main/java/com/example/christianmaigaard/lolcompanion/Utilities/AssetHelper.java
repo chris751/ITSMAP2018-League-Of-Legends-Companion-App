@@ -39,5 +39,53 @@ public class AssetHelper {
         }
     }
 
+    public static Drawable loadRankTierImageFromAssets(Context context,String tier) {
+        String fileName = "";
+        switch (tier){
+            case (Constants.RANK_UNRANKED):
+                fileName = "";
+                return null;
+            case (Constants.RANK_IRON):
+                fileName = "Iron_Emblem";
+                break;
+            case (Constants.RANK_BRONZE):
+                fileName = "Bronze_Emblem";
+                break;
+            case (Constants.RANK_SILVER):
+                fileName = "Silver_Emblem";
+                break;
+            case (Constants.RANK_GOLD):
+                fileName = "Gold_Emblem";
+                break;
+            case (Constants.RANK_PLATINUM):
+                fileName = "Platinum_Emblem";
+                break;
+            case (Constants.RANK_DIAMOND):
+                fileName = "Diamond_Emblem";
+                break;
+            case (Constants.RANK_MASTER):
+                fileName = "Master_Emblem";
+                break;
+            case (Constants.RANK_GRANDMASTER):
+                fileName = "Grandmaster_Emblem";
+                break;
+            case (Constants.RANK_CHALLENGER):
+                fileName = "Challenger_Emblem";
+                break;
+        }
+
+        // load image
+        try {
+            // get input stream
+            InputStream ims = context.getAssets().open("rank/" + fileName + ".png");
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            return d;
+        }
+        catch(IOException ex) {
+            return null;
+        }
+    }
+
 
 }
