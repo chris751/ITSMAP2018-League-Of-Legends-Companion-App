@@ -28,6 +28,7 @@ import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_NAME;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_PROFILE_ICON_ID;
 
 public class EnterSummonerNameActivity extends AppCompatActivity {
 
@@ -52,7 +53,6 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_summoner_name);
-
 
         // Button
         findSummonerName = findViewById(R.id.enter_summoner_name_find_button);
@@ -126,6 +126,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
                     long summonerLevel = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
                     String name = intent.getStringExtra(SUMMONER_NAME);
                     long id = intent.getLongExtra(Constants.SUMMONER_ID,0);
+                    long profileIconId = intent.getLongExtra(SUMMONER_PROFILE_ICON_ID,0);
                     String error = intent.getStringExtra(Constants.ERROR);
                     if(error != null && !error.isEmpty()) {
                         switch (error) {
@@ -145,6 +146,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
                     i.putExtra(SUMMONER_NAME, name);
                     i.putExtra(SUMMONER_ID, id);
                     i.putExtra(SUMMONER_LEVEL, summonerLevel);
+                    i.putExtra(SUMMONER_PROFILE_ICON_ID, profileIconId);
                     startActivity(i);
                 }
             }

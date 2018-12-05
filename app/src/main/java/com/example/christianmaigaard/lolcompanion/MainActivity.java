@@ -37,6 +37,7 @@ import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.MAT
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_ID;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_LEVEL;
 import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_NAME;
+import static com.example.christianmaigaard.lolcompanion.Utilities.Constants.SUMMONER_PROFILE_ICON_ID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
     // UI
     private TextView name;
-    private TextView profileIcon;
     private TextView level;
     private TextView bestChamp;
     private ImageView champImage;
+    private ImageView summonerProfileImage;
     private Button changeName;
     private Button getInfo;
     private Button liveGame;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private String summonerName;
     private long summonerLevel;
     private long summonerID;
+    private long summonerProfileId;
     private boolean mIsInGame = true;
     // Services
     private CommunicationService mService;
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         summonerName = extras.getString(SUMMONER_NAME);
         summonerLevel = extras.getLong(SUMMONER_LEVEL,0);
         summonerID = extras.getLong(SUMMONER_ID,0);
+        summonerProfileId = extras.getLong(SUMMONER_PROFILE_ICON_ID,0);
     }
 
     private void setupList(ArrayList<Match> matchList){
@@ -111,15 +114,6 @@ public class MainActivity extends AppCompatActivity {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(BROADCAST_MATCH_HISTORY_ACTION)){
-                    //MatchWrapper matches = intent.getSerializableExtra(MATCH_HISTORY_EXTRA);
-
-                    MatchWrapper matchWrapper = (MatchWrapper) intent.getExtras().get(BROADCAST_MATCH_HISTORY_ACTION);
-                    ArrayList<Match> matches = matchWrapper.getPlayerList();
-                    Log.d(LOG, String.valueOf(matches.get(0)));
-                    //setupList(playerList);
-                }
-
                 if(intent.getAction().equals(Constants.BROADCAST_BEST_CHAMPION_ACTION)){
                     String bestChampName = intent.getStringExtra(Constants.BEST_CHAMPION_NAME_EXTRA);
                     String bestChampAlias = intent.getStringExtra(Constants.BEST_CHAMPION_ALIAS_EXTRA);
@@ -128,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if(intent.getAction().equals(Constants.BROADCAST_SUMMONER_INFO_ACTION)){
                     long summonerLvl = intent.getLongExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA,0);
+                    long profileIconId = intent.getLongExtra(Constants.SUMMONER_PROFILE_ICON_ID,0);
+
                     level.setText(summonerLvl+"");
                 }
                 if(intent.getAction().equals(Constants.BROADCAST_IS_IN_GAME_ACTION)){
@@ -188,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupUiComponents() {
         name = findViewById(R.id.nameView);
-        profileIcon = findViewById(R.id.profileIconView);
         level = findViewById(R.id.levelView);
         bestChamp = findViewById(R.id.bestChampView);
         getInfo = findViewById(R.id.getInfoButton);
@@ -196,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         champImage = findViewById(R.id.champIcon);
         liveGame = findViewById(R.id.goToLive);
         matchHistoryView = findViewById(R.id.matchHistory);
+        summonerProfileImage = findViewById(R.id.summonerProfileImage);
     }
 
     // Calls all relevant services to gather information about current summoner
@@ -206,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateUI() {
         name.setText(summonerName);
         level.setText(String.valueOf(summonerLevel));
+        summonerProfileImage.setImageDrawable(AssetHelper.loadIconImageFromAssets(MainActivity.this, String.valueOf(summonerProfileId)));
     }
 
     /*

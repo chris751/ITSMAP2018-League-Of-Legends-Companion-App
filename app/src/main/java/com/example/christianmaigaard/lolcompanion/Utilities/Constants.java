@@ -48,6 +48,7 @@ public final class Constants {
     public static final String SUMMONER_NAME = "SummonorName";
     public static final String SUMMONER_LEVEL = "SummonerLevel";
     public static final String SUMMONER_ID = "SummonerID";
+    public static final String SUMMONER_PROFILE_ICON_ID = "profileIconId";
     public static final String ERROR = "Error";
 
     // Volley erros

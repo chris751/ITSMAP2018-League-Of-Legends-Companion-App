@@ -33,5 +33,6 @@
     <string name="intermediate">Intermediate</string>
     <string name="one_trick">One trick</string>
     <string name="verdict">Verdict</string>
+    <string name="rank">Rank</string>
 
 </resources>

@@ -133,10 +133,12 @@ public class CommunicationService extends Service {
                             String name = response.getString("name");
                             long summonerLvl = response.getLong("summonerLevel");
                             long summonerId = response.getLong("id");
+                            long profileIconId = response.getLong("profileIconId");
                             //Log.d(LOG, summonerLvl+"");
                             intent.putExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA, summonerLvl);
                             intent.putExtra(Constants.SUMMONER_NAME, name);
                             intent.putExtra(Constants.SUMMONER_ID, summonerId);
+                            intent.putExtra(Constants.SUMMONER_PROFILE_ICON_ID, profileIconId);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
