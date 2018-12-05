@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent" android:layout_width="match_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteY="25dp">
 
     <ImageView
+        android:id="@+id/champIcon"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:id="@+id/champIcon"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
+        android:id="@+id/isWin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:text="Large Text"
-        android:id="@+id/isWin"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/champIcon"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_constraintStart_toEndOf="@+id/champIcon"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
+        android:id="@+id/kda"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Medium Text"
-        android:id="@+id/kda"
-        android:layout_toRightOf="@+id/isWin"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

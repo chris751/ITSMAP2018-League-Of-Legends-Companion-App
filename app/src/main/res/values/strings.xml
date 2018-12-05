@@ -34,5 +34,7 @@
     <string name="one_trick">One trick</string>
     <string name="verdict">Verdict</string>
     <string name="rank">Rank</string>
+    <string name="victory">Victory</string>
+    <string name="defeat">Defeat</string>
 
 </resources>

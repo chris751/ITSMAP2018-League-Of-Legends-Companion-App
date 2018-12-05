@@ -131,6 +131,7 @@ public class LiveSummonerInfoActivity extends AppCompatActivity {
         masteryInfo = findViewById(R.id.masteryInfoView);
         summonerSkillBarometer = findViewById(R.id.summonerSkillBarometer);
         summonerInfoSpinner = findViewById(R.id.summonerInfoSpinner);
+        // https://stackoverflow.com/questions/13509989/how-to-set-the-android-progressbars-height/20360132
         summonerSkillBarometer.setScaleY(5f);
     }
 

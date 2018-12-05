@@ -71,9 +71,9 @@ public class MatchHistoryListAdapter extends BaseAdapter {
 
             String isWinText;
             if(match.getWin()){
-                isWinText = "WIN"; // TODO: her kan vi evt. lave om på noget farve eller noget -- EXTERNALIZE
+                isWinText = context.getString(R.string.victory);
             } else {
-                isWinText = "LOSE"; // TODO: same as above
+                isWinText = context.getString(R.string.defeat);
             }
             isWin.setText(isWinText);
 
