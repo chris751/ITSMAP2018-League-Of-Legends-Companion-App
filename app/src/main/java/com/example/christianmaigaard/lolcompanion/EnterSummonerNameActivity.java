@@ -7,8 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.VideoView;
@@ -40,6 +45,7 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
     EditText enterSummonerName;
     ProgressBar spinner;
     VideoView video;
+    ImageView lolCampanionLogo;
 
     private CommunicationService mService;
     private boolean mBound = false;
@@ -55,6 +61,10 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_summoner_name);
 
+        // image
+        lolCampanionLogo = findViewById(R.id.lolCampanionLogo);
+        lolCampanionLogo.setImageResource(R.drawable.lol_companion_logo);
+
         // Button
         findSummonerName = findViewById(R.id.enter_summoner_name_find_button);
         findSummonerName.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +76,10 @@ public class EnterSummonerNameActivity extends AppCompatActivity {
 
         // EditText
         enterSummonerName = findViewById(R.id.enter_summoner_name_edit_text);
+
+        //enterSummonerName.getBackground().setColorFilter(Color.parseColor("#99616161"), PorterDuff.Mode.SRC_ATOP);
+        enterSummonerName.setHintTextColor(Color.parseColor("#FFFFFF"));
+        enterSummonerName.setBackgroundColor(Color.parseColor("#99616161"));
         spinner = findViewById(R.id.enter_summoner_name_progressbar);
         // Service
         if (!mBound) {

@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageView champImage;
     private ImageView summonerProfileImage;
     private Button changeName;
-    private Button getInfo;
     private Button liveGame;
     private ListView matchHistoryView;
     private ImageView rankedTier;
@@ -170,15 +169,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        getInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mBound){
-                    mService.getBestChamp();
-                }
-            }
-        });
         liveGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
         name = findViewById(R.id.nameView);
         level = findViewById(R.id.levelView);
         bestChamp = findViewById(R.id.bestChampView);
-        getInfo = findViewById(R.id.getInfoButton);
         changeName = findViewById(R.id.main_activity_change_name_button);
         champImage = findViewById(R.id.champIcon);
         liveGame = findViewById(R.id.goToLive);
