@@ -4,13 +4,13 @@
 
     <ImageView
         android:id="@+id/champIcon"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:src="@mipmap/ic_launcher" />
 
     <TextView
@@ -23,7 +23,7 @@
         android:layout_toLeftOf="@id/champIcon"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="30sp" />
+        android:textSize="36sp" />
 
     <TextView
         android:id="@+id/summonerName"
@@ -34,6 +34,6 @@
         android:layout_marginRight="0dp"
         android:layout_toLeftOf="@+id/champIcon"
         android:text="Medium Text"
-        android:textSize="24sp" />
+        android:textSize="30sp" />
 
 </RelativeLayout>
