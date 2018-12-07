@@ -77,10 +77,14 @@ public class LiveSummonerInfoActivity extends AppCompatActivity {
                         summonerSkillBarometer.setProgress(masteryLevel.getSkillLevel());
                     }
                 }
+                if (intent.getAction().equals(Constants.BROADCAST_END_GAME_ACTION)){
+                    finish();
+                }
             }
         };
         mFilter = new IntentFilter();
         mFilter.addAction(Constants.BROADCAST_CURRENT_CHAMP_MASTERY_ACTION);
+        mFilter.addAction(Constants.BROADCAST_END_GAME_ACTION);
         registerReceiver(mReceiver, mFilter);
     }
 

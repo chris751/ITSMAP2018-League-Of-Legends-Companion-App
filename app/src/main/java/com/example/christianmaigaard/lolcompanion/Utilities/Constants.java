@@ -6,7 +6,7 @@ public final class Constants {
 
     // end points and url for riot api
     // Building api call example: RIOT_API_BASE_URL + <END_POINT> + API_KEY
-    public static final String RIOT_API_BASE_URL = "https://euw1.api.riotgames.com";
+    public static final String RIOT_API_BASE_URL = "https://na1.api.riotgames.com";
     public static final String RIOT_API_SUMMONER_INFO_END_POINT = "/lol/summoner/v3/summoners/by-name/";
     public static final String RIOT_API_BEST_CHAMP_END_POINT = "/lol/champion-mastery/v3/champion-masteries/by-summoner/";
     public static final String RIOT_API_SPECTATOR_END_POINT = "/lol/spectator/v3/active-games/by-summoner/";
@@ -29,6 +29,7 @@ public final class Constants {
     public static final String BROADCAST_API_KEY = "API_KEY";
     public static final String BROADCAST_MATCH_HISTORY_ACTION = "BROADCAST_MATCH_HISTORY_ACTION";
     public static final String BROADCAST_RANK_ACTION = "BROADCAST_RANK_ACTION";
+    public static final String BROADCAST_END_GAME_ACTION = "BROADCAST_END_GAME_ACTION";
 
     // EXTRAS
     public static final String BEST_CHAMPION_NAME_EXTRA = "BEST_CHAMPION_NAME_EXTRA";

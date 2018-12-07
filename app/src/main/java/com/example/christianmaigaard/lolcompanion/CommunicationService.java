@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -100,9 +101,16 @@ public class CommunicationService extends Service {
         }, new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError error){
-                if(error.networkResponse.statusCode == 404){
-                    // if call is failure with code 404 no game is active
-                    broadcastInGameStatus(false);
+                // null check source: https://stackoverflow.com/questions/22948006/http-status-code-in-android-volley-when-error-networkresponse-is-null
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null) {
+                    if(error.networkResponse.statusCode == 404){
+                        // if call is failure with code 404 no game is active
+                        broadcastInGameStatus(false);
+
+                        Intent intent = new Intent(Constants.BROADCAST_END_GAME_ACTION);
+                        sendBroadcast(intent);
+                    }
                 }
             }
         }

@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private long summonerLevel;
     private long summonerID;
     private long summonerProfileId;
-    private boolean mIsInGame = true;
+    private boolean mIsInGame = false;
     private long accountID;
     // Services
     private CommunicationService mService;
@@ -154,9 +154,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void processInGameStatus(boolean isInGame){
         if(isInGame && !this.mIsInGame){
+            liveGame.setVisibility(View.VISIBLE);
             mIsInGame = isInGame;
             goToLiveGameActivity();
         } else if(!isInGame && this.mIsInGame){
+            liveGame.setVisibility(View.INVISIBLE);
             mIsInGame = isInGame;
         }
     }
@@ -197,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
         summonerProfileImage = findViewById(R.id.summonerProfileImage);
         rankedTier = findViewById(R.id.rankTierIconView);
         winLossView = findViewById(R.id.winLossView);
+        liveGame.setVisibility(View.INVISIBLE);
     }
 
     // Calls all relevant services to gather information about current summoner
