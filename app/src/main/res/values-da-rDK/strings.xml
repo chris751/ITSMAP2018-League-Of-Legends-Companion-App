@@ -24,4 +24,11 @@
     <string name="champion_level_7">Denne er en af summonerens primære champion, kender dens manøvre ud og ind</string>
     <string name="champion_level_8">Pas meget på, one trick potentiale. Hold øje med pludselige bevægelser, lad dig ikke bide på krogen</string>
     <string name="champion_level_9">Højst sandsynlig en gudespiller. Helt sikkert en one trick. FF15</string>
+    <string name="not_in_game_title">Intet aktivt spil</string>
+    <string name="novice">Nybegynder</string>
+    <string name="intermediate">Øvet</string>
+    <string name="verdict">Resultat</string>
+    <string name="rank">Rangering</string>
+    <string name="victory">Sejr</string>
+    <string name="defeat">Nederlag</string>
 </resources>
