@@ -27,6 +27,7 @@
         android:layout_toRightOf="@+id/champIcon"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
+
         android:textSize="30sp" />
 
     <TextView
