@@ -78,11 +78,15 @@ public class LiveGameActivity extends AppCompatActivity {
                     ArrayList<Participant> playerList = wrappedList.getPlayerList();
                     setupList(playerList);
                 }
+                if (intent.getAction().equals(Constants.BROADCAST_END_GAME_ACTION)){
+                    finish();
+                }
 
             }
         };
         mFilter = new IntentFilter();
         mFilter.addAction(Constants.BROADCAST_GAME_PARTICIPANTS_ACTION);
+        mFilter.addAction(Constants.BROADCAST_END_GAME_ACTION);
         registerReceiver(mReceiver, mFilter);
     }
 
