@@ -31,4 +31,6 @@
     <string name="rank">Rangering</string>
     <string name="victory">Sejr</string>
     <string name="defeat">Nederlag</string>
+    <string name="change_name">Ændr nanv</string>
+    <string name="live_game">Igangværende spil</string>
 </resources>

@@ -81,4 +81,37 @@ public final class Constants {
     public static final String RANK_GRANDMASTER = "GRANDMASTER";
     public static final String RANK_CHALLENGER = "CHALLENGER";
     public static final String RANK_UNRANKED = "UNRANKED";
+
+    // API response KEYS
+    public static final String SUMMONER_NAME_KEY = "name";
+    public static final String SUMMONER_ID_KEY = "id";
+    public static final String SUMMONER_ACCOUNT_ID_KEY = "accountId";
+    public static final String SUMMONER_LEVEL_KEY = "summonerLevel";
+    public static final String SUMMONER_PROFILE_ICON_ID_KEY = "profileIconId";
+
+    public static final String CHAMPION_ID_KEY = "championId";
+    public static final String CHAMPION_NAME_KEY = "name";
+    public static final String CHAMPION_ALIAS_KEY = "alias";
+    public static final String CHAMPION_POINTS_KEY = "championPoints";
+
+    public static final String GAME_PARTICIPANTS_KEY = "participants";
+    public static final String GAME_PARTICIPANT_ID_KEY = "summonerId";
+    public static final String GAME_PARTICIPANT_NAME_KEY = "summonerName";
+
+    public static final String GOOGLE_VALUES_KEY = "values";
+
+    public static final String MATCH_LIST_MATCHES_KEY = "matches";
+    public static final String MATCH_LIST_GAME_ID_KEY = "gameId";
+    public static final String MATCH_LIST_CHAMPION_IDENTIFIER_KEY = "champion";
+    public static final String MATCH_LIST_PARTICIPANT_STATS_KEY = "stats";
+    public static final String MATCH_LIST_PARTICIPANT_STATS_KILLS_KEY = "kills";
+    public static final String MATCH_LIST_PARTICIPANT_STATS_ASSISTS_KEY = "assists";
+    public static final String MATCH_LIST_PARTICIPANT_STATS_DEATHS_KEY = "deaths";
+    public static final String MATCH_LIST_PARTICIPANT_STATS_WIN_KEY = "win";
+
+    public static final String RANK_QUEUE_TYPE_KEY = "queueType";
+    public static final String RANK_QUEUE_TYPE_RANKED_5V5_KEY = "RANKED_SOLO_5x5";
+    public static final String RANK_WINS_KEY = "wins";
+    public static final String RANK_LOSSES_KEY = "losses";
+    public static final String RANK_TIER_KEY = "tier";
 }

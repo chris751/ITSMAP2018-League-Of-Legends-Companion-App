@@ -138,11 +138,11 @@ public class CommunicationService extends Service {
                         Intent intent = new Intent(Constants.BROADCAST_SUMMONER_INFO_ACTION);
                         try {
 
-                            String name = response.getString("name");
-                            long summonerLvl = response.getLong("summonerLevel");
-                            long summonerId = response.getLong("id");
-                            long profileIconId = response.getLong("profileIconId");
-                            long accountId = response.getLong("accountId");
+                            String name = response.getString(Constants.SUMMONER_NAME_KEY);
+                            long summonerLvl = response.getLong(Constants.SUMMONER_LEVEL_KEY);
+                            long summonerId = response.getLong(Constants.SUMMONER_ID_KEY);
+                            long profileIconId = response.getLong(Constants.SUMMONER_PROFILE_ICON_ID_KEY);
+                            long accountId = response.getLong(Constants.SUMMONER_ACCOUNT_ID_KEY);
                             intent.putExtra(Constants.SUMMONER_PROFILE_ICON_ID, profileIconId);
                             intent.putExtra(Constants.SUMMONER_INFO_LEVEL_EXTRA, summonerLvl);
                             intent.putExtra(Constants.SUMMONER_NAME, name);
@@ -178,7 +178,7 @@ public class CommunicationService extends Service {
                     public void onResponse(JSONArray response) {
                         try {
                             JSONObject firstObject = (JSONObject) response.get(0);
-                            long firstObjectId = firstObject.getLong("championId");
+                            long firstObjectId = firstObject.getLong(Constants.CHAMPION_ID_KEY);
                             createChampionNameByIdRequest(firstObjectId);
                         } catch (JSONException e) {
                             Log.d(LOG, e.toString());
@@ -206,8 +206,8 @@ public class CommunicationService extends Service {
                 Log.d("requestResponse","Response: " + response.toString());
                 Intent intent = new Intent(Constants.BROADCAST_BEST_CHAMPION_ACTION);
                 try {
-                    intent.putExtra(Constants.BEST_CHAMPION_NAME_EXTRA, response.getString("name"));
-                    intent.putExtra(Constants.BEST_CHAMPION_ALIAS_EXTRA, response.getString("alias"));
+                    intent.putExtra(Constants.BEST_CHAMPION_NAME_EXTRA, response.getString(Constants.CHAMPION_NAME_KEY));
+                    intent.putExtra(Constants.BEST_CHAMPION_ALIAS_EXTRA, response.getString(Constants.CHAMPION_ALIAS_KEY));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -237,12 +237,12 @@ public class CommunicationService extends Service {
                 playersInGame.clear();
 
                 try {
-                    JSONArray participants = response.getJSONArray("participants");
+                    JSONArray participants = response.getJSONArray(Constants.GAME_PARTICIPANTS_KEY);
                     //Save all the game participants in a list
                     int i = 0;
                     while(i <participants.length()){
                         JSONObject jsonParticipant = (JSONObject) participants.get(i);
-                        Participant p = new Participant(jsonParticipant.getLong("summonerId"), jsonParticipant.getString("summonerName"), jsonParticipant.getLong("championId"));
+                        Participant p = new Participant(jsonParticipant.getLong(Constants.GAME_PARTICIPANT_ID_KEY), jsonParticipant.getString(Constants.GAME_PARTICIPANT_NAME_KEY), jsonParticipant.getLong(Constants.CHAMPION_ID_KEY));
                         playersInGame.add(p);
                         i++;
                     }
@@ -278,8 +278,8 @@ public class CommunicationService extends Service {
             public void onResponse(JSONObject response) {
                 Log.d("requestResponse","Response: " + response.toString());
                 try {
-                    String name = response.getString("name");
-                    String alias = response.getString("alias");
+                    String name = response.getString(Constants.CHAMPION_NAME_KEY);
+                    String alias = response.getString(Constants.CHAMPION_ALIAS_KEY);
                     playersInGame.get(index).setChampionName(name);
                     playersInGame.get(index).setChampionAlias(alias);
                 } catch (JSONException e) {
@@ -339,7 +339,7 @@ public class CommunicationService extends Service {
     private void findCurrentChamp(JSONArray champArray,long championId) throws JSONException {
         for(int i = 0; i < champArray.length(); i++){
             JSONObject champion = (JSONObject) champArray.get(i);
-            long fromArrayId = champion.getLong("championId");
+            long fromArrayId = champion.getLong(Constants.CHAMPION_ID_KEY);
             if(fromArrayId == championId) {
                 Log.d("yoyoyo", "fundet en champ stedet");
                 processCurrentChampInfo(champion);
@@ -353,7 +353,7 @@ public class CommunicationService extends Service {
     }
 
     private void processCurrentChampInfo(JSONObject champion) throws JSONException {
-        int championPoints = champion.getInt("championPoints");
+        int championPoints = champion.getInt(Constants.CHAMPION_POINTS_KEY);
 
         Intent intent = new Intent(Constants.BROADCAST_CURRENT_CHAMP_MASTERY_ACTION);
         intent.putExtra(CHAMPMION_POINTS, championPoints);
@@ -372,7 +372,7 @@ public class CommunicationService extends Service {
                 Log.d("requestResponse","Response: " + response.toString());
                 Intent intent = new Intent(Constants.BROADCAST_API_KEY);
                 try { ;
-                    JSONArray values = response.getJSONArray("values");
+                    JSONArray values = response.getJSONArray(Constants.GOOGLE_VALUES_KEY);
                     Object apiKey = values.get(0);
                     String api = apiKey.toString();
                     api = api.substring(2, api.length()-2);
@@ -408,10 +408,10 @@ public class CommunicationService extends Service {
                 try {
                     Log.d("LISTEN JEG VIL SE", "første kald igennem");
                     ArrayList<Match> matchList = new ArrayList<Match>();
-                    JSONArray jsonMatchList = response.getJSONArray("matches");
+                    JSONArray jsonMatchList = response.getJSONArray(Constants.MATCH_LIST_MATCHES_KEY);
                     for(int i = 0; i < 10; i++){
                         JSONObject jsonMatch = (JSONObject) jsonMatchList.get(i);
-                        Match match = new Match(i, jsonMatch.getLong("gameId"), jsonMatch.getLong("champion"));
+                        Match match = new Match(i, jsonMatch.getLong(Constants.MATCH_LIST_GAME_ID_KEY), jsonMatch.getLong(Constants.MATCH_LIST_CHAMPION_IDENTIFIER_KEY));
                         matchList.add(match);
                     }
                     processMatchList(matchList);
@@ -455,21 +455,21 @@ public class CommunicationService extends Service {
                     boolean win;
                     JSONObject thisPlayer = null;
                     JSONObject thisPlayerStats = null;
-                    JSONArray participantList = (JSONArray) response.getJSONArray("participants");
+                    JSONArray participantList = (JSONArray) response.getJSONArray(Constants.GAME_PARTICIPANTS_KEY);
                     for(int i = 0; i < participantList.length(); i++){
                         JSONObject participant = participantList.getJSONObject(i);
-                        if(championId == participant.getInt("championId")){
+                        if(championId == participant.getInt(Constants.CHAMPION_ID_KEY)){
                             thisPlayer = participant;
                         }
                     }
                     if(thisPlayer!=null){
-                        thisPlayerStats = (JSONObject) thisPlayer.getJSONObject("stats");
+                        thisPlayerStats = (JSONObject) thisPlayer.getJSONObject(Constants.MATCH_LIST_PARTICIPANT_STATS_KEY);
                     }
                     if(thisPlayerStats!=null){
-                        kills = thisPlayerStats.getInt("kills");
-                        deaths = thisPlayerStats.getInt("deaths");
-                        assists = thisPlayerStats.getInt("assists");
-                        win = thisPlayerStats.getBoolean("win");
+                        kills = thisPlayerStats.getInt(Constants.MATCH_LIST_PARTICIPANT_STATS_KILLS_KEY);
+                        deaths = thisPlayerStats.getInt(Constants.MATCH_LIST_PARTICIPANT_STATS_DEATHS_KEY);
+                        assists = thisPlayerStats.getInt(Constants.MATCH_LIST_PARTICIPANT_STATS_ASSISTS_KEY);
+                        win = thisPlayerStats.getBoolean(Constants.MATCH_LIST_PARTICIPANT_STATS_WIN_KEY);
 
                         match.setWin(win);
                         match.setDeaths(deaths);
@@ -509,7 +509,7 @@ public class CommunicationService extends Service {
             public void onResponse(JSONObject response) {
                 Log.d("requestResponse","Response: " + response.toString());
                 try {
-                    String alias = response.getString("alias");
+                    String alias = response.getString(Constants.CHAMPION_ALIAS_KEY);
                     match.setChampionAlias(alias);
                     createInformedMatchHistory(match);
                 } catch (JSONException e) {
@@ -569,10 +569,10 @@ public class CommunicationService extends Service {
                 for(int i = 0; i < response.length(); i++){
                     try {
                         JSONObject queueType = (JSONObject) response.get(i);
-                        if(queueType.getString("queueType").equals("RANKED_SOLO_5x5")){
-                            int wins = queueType.getInt("wins");
-                            int losses = queueType.getInt("losses");
-                            String tier = queueType.getString("tier");
+                        if(queueType.getString(Constants.RANK_QUEUE_TYPE_KEY).equals(Constants.RANK_QUEUE_TYPE_RANKED_5V5_KEY)){
+                            int wins = queueType.getInt(Constants.RANK_WINS_KEY);
+                            int losses = queueType.getInt(Constants.RANK_LOSSES_KEY);
+                            String tier = queueType.getString(Constants.RANK_TIER_KEY);
 
                             Rank rank = new Rank(wins, losses, tier);
                             broadcastRank(rank);
